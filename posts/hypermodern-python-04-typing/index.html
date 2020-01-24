@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Claudio Jolowicz">
+    <meta name="description" content="Claudio Jolowicz&#39;s website">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hypermodern Python Chapter 4: Typing"/>
+<meta name="twitter:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism."/>
+
+    <meta property="og:title" content="Hypermodern Python Chapter 4: Typing" />
+<meta property="og:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cjolowicz.github.io/posts/hypermodern-python-04-typing/" />
+<meta property="article:published_time" content="2020-01-22T10:04:00&#43;01:00"/>
+<meta property="article:modified_time" content="2020-01-22T10:04:00&#43;01:00"/>
+
+
+    
+      <base href="https://cjolowicz.github.io/posts/hypermodern-python-04-typing/">
+    
+    <title>
+  Hypermodern Python Chapter 4: Typing · Claudio Jolowicz&#39;s website
+</title>
+
+    
+      <link rel="canonical" href="https://cjolowicz.github.io/posts/hypermodern-python-04-typing/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://cjolowicz.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.55.4" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://cjolowicz.github.io/">
+      Claudio Jolowicz&#39;s website
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://cjolowicz.github.io/posts/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="http://claudiojolowicz.com/">Music</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Hypermodern Python Chapter 4: Typing</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-01-22T10:04:00&#43;01:00'>
+                January 22, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              13 minutes read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://cjolowicz.github.io/tags/python/">python</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/nox/">nox</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/mypy/">mypy</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/pytype/">pytype</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/flake8/">flake8</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        
+
+<p><a href="https://medium.com/@cjolowicz/hypermodern-python-4-typing-31bcf12314ff">Read this article on Medium</a></p>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard01.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard01.jpg"/> </a>
+</figure>
+
+
+<p>In this fourth installment of the Hypermodern Python series, I&rsquo;m going to
+discuss how to add type annotations and type checking to your project.<sup class="footnote-ref" id="fnref:1"><a href="#fn:1">1</a></sup>
+Previously, we discussed <a href="../hypermodern-python-03-linting">how to add linting, static analysis, and code
+formatting</a>. (If you start reading here, you
+can also
+<a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter03.zip">download</a>
+the code for the previous chapter.)</p>
+
+<p>Here are the topics covered in this chapter on Typing in Python:</p>
+
+<ul>
+<li><a href="#type-annotations-and-type-checkers">Type annotations and type checkers</a></li>
+<li><a href="#static-type-checking-with-mypy">Static type checking with mypy</a></li>
+<li><a href="#static-type-checking-with-pytype">Static type checking with pytype</a></li>
+<li><a href="#adding-type-annotations-to-the-package">Adding type annotations to the package</a></li>
+<li><a href="#data-validation-using-desert-and-marshmallow">Data validation using Desert and Marshmallow</a></li>
+<li><a href="#runtime-type-checking-with-typeguard">Runtime type checking with Typeguard</a></li>
+<li><a href="#increasing-type-coverage-with-flake8annotations">Increasing type coverage with flake8-annotations</a></li>
+<li><a href="#adding-type-annotations-to-nox-sessions">Adding type annotations to Nox sessions</a></li>
+<li><a href="#adding-type-annotations-to-the-test-suite">Adding type annotations to the test suite</a></li>
+</ul>
+
+<p>Here is a full list of the articles in this series:</p>
+
+<ul>
+<li><a href="../hypermodern-python-01-setup">Chapter 1: Setup</a></li>
+<li><a href="../hypermodern-python-02-testing">Chapter 2: Testing</a></li>
+<li><a href="../hypermodern-python-03-linting">Chapter 3: Linting</a></li>
+<li><a href="../hypermodern-python-04-typing">Chapter 4: Typing</a> (this article)</li>
+<li><em>Chapter 5: Documentation</em></li>
+<li><em>Chapter 6: CI/CD</em></li>
+<li><em>Appendix: Docker</em></li>
+</ul>
+
+<p>This guide has a companion repository:
+<a href="https://github.com/cjolowicz/hypermodern-python">cjolowicz/hypermodern-python</a>.
+Each article in the guide corresponds to a set of commits in the GitHub
+repository:</p>
+
+<ul>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/compare/chapter03...chapter04">View changes</a></li>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter04.zip">Download code</a></li>
+</ul>
+
+<h2 id="type-annotations-and-type-checkers">Type annotations and type checkers</h2>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard02.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard02.jpg"/> </a>
+</figure>
+
+
+<p><a href="https://docs.python.org/3/library/typing.html">Type annotations</a>, first
+introduced in Python 3.5, are a way to annotate functions and variables with
+types. Combined with tooling that understands them, they can make your programs
+easier to understand, debug, and maintain. Here are two simple examples of type
+annotations:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># This is a variable holding an integer.</span>
+answer: int <span style="color:#f92672">=</span> <span style="color:#ae81ff">42</span>
+
+
+<span style="color:#75715e"># This is a function which accepts and returns an integer.</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">increment</span>(number: int) <span style="color:#f92672">-&gt;</span> int:
+    <span style="color:#66d9ef">return</span> number <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span></code></pre></div>
+<p>The Python runtime does not enforce type annotations. Python is a dynamically
+typed language: it only verifies the types of your program at runtime, and uses
+<em>duck typing</em> to do so (&ldquo;if it walks and quacks like a duck, it is a duck&rdquo;). A
+static type checker, by contrast, can use type annotations and type inference to
+verify the type correctness of your program without executing it, helping you
+discover many bugs that would otherwise go unnoticed.</p>
+
+<p>The introduction of type annotations has paved the way for an entire generation
+of static type checkers: <a href="http://mypy-lang.org/">mypy</a> can be considered the
+pioneer and <em>de facto</em> reference implementation of Python type checking; several
+core Python developers are involved in its development. Google, Facebook, and
+Microsoft have each announced their own static type checkers for Python:
+<a href="https://google.github.io/pytype/">pytype</a>, <a href="https://pyre-check.org/">pyre</a>, and
+<a href="https://github.com/microsoft/pyright">pyright</a>, respectively. JetBrain&rsquo;s Python
+IDE <a href="https://www.jetbrains.com/pycharm/">PyCharm</a> also ships with a static type
+checker. In this chapter, we introduce mypy and pytype. We also take a look at
+<a href="https://github.com/agronholm/typeguard">Typeguard</a>, a runtime type checker.</p>
+
+<h2 id="static-type-checking-with-mypy">Static type checking with mypy</h2>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard09.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard09.jpg"/> </a>
+</figure>
+
+
+<p>Add <a href="http://mypy-lang.org/">mypy</a> as a development dependency:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev mypy</code></pre></div>
+<p>Add the following Nox session to type-check your source code with mypy:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;3.8&#34;</span>, <span style="color:#e6db74">&#34;3.7&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mypy</span>(session: Session) <span style="color:#f92672">-&gt;</span> None:
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    install_with_constraints(session, <span style="color:#e6db74">&#34;mypy&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74">&#34;mypy&#34;</span>, <span style="color:#f92672">*</span>args)</code></pre></div>
+<p>Include mypy in the default Nox sessions:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">nox<span style="color:#f92672">.</span>options<span style="color:#f92672">.</span>sessions <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;lint&#34;</span>, <span style="color:#e6db74">&#34;mypy&#34;</span>, <span style="color:#e6db74">&#34;tests&#34;</span></code></pre></div>
+<p>Run the Nox session using the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs mypy</code></pre></div>
+<p>Mypy raises an error if it cannot find any type definitions for a Python package
+used by your program. Unless you are going to write these type definitions
+yourself, you should disable the error using the <code>mypy.ini</code> configuration file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># mypy.ini</span>
+<span style="color:#66d9ef">[mypy]</span>
+
+<span style="color:#66d9ef">[mypy-nox.*,pytest]</span>
+<span style="color:#a6e22e">ignore_missing_imports</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">True</span></code></pre></div>
+<p>Specifying the packages explicitly helps you keep track of dependencies that are
+currently out of scope of the type checker. You may soon be able to cut down on
+this list, as many projects are actively working on typing support.</p>
+
+<h2 id="static-type-checking-with-pytype">Static type checking with pytype</h2>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard04.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard04.jpg"/> </a>
+</figure>
+
+
+<p>Add <a href="https://google.github.io/pytype/">pytype</a> as a development dependency, for
+<a href="https://github.com/google/pytype/issues/440">Python 3.7 only</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev --python<span style="color:#f92672">=</span><span style="color:#ae81ff">3</span>.7 pytype</code></pre></div>
+<p>Add the following Nox session to run pytype:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;3.7&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pytype</span>(session):
+    <span style="color:#e6db74">&#34;&#34;&#34;Run the static type checker.&#34;&#34;&#34;</span>
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> [<span style="color:#e6db74">&#34;--disable=import-error&#34;</span>, <span style="color:#f92672">*</span>locations]
+    install_with_constraints(session, <span style="color:#e6db74">&#34;pytype&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74">&#34;pytype&#34;</span>, <span style="color:#f92672">*</span>args)</code></pre></div>
+<p>In this session, we use the command-line option <code>--disable=import-error</code> because
+pytype, like mypy, reports import errors for third-party packages without type
+annotations.</p>
+
+<p>Run the Nox session using the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs pytype</code></pre></div>
+<p>Update <code>nox.options.session</code> to include static type checking with pytype by
+default:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">nox<span style="color:#f92672">.</span>options<span style="color:#f92672">.</span>sessions <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;lint&#34;</span>, <span style="color:#e6db74">&#34;mypy&#34;</span>, <span style="color:#e6db74">&#34;pytype&#34;</span>, <span style="color:#e6db74">&#34;tests&#34;</span></code></pre></div>
+<h2 id="adding-type-annotations-to-the-package">Adding type annotations to the package</h2>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard05.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard05.jpg"/> </a>
+</figure>
+
+
+<p>Let&rsquo;s add some type annotations to the package, starting with <code>console.main</code>.
+Don&rsquo;t be distracted by the decorators applied to it: This is a simple function
+accepting a <code>str</code>, and returning <code>None</code> by &ldquo;falling off its end&rdquo;:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/console.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>(language: str) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span></code></pre></div>
+<p>In the <code>wikipedia</code> module, the <code>API_URL</code> constant is a string:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">API_URL: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://{language}.wikipedia.org/api/rest_v1/page/random/summary&#34;</span></code></pre></div>
+<p>The <code>wikipedia.random_page</code> function accepts an optional parameter of type
+<code>str</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>(language: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;en&#34;</span>): <span style="color:#f92672">...</span></code></pre></div>
+<p>The <code>wikipedia.random_page</code> function returns the JSON object received from the
+Wikipedia API. JSON objects are represented in Python using built-in types such
+as <code>dict</code>, <code>list</code>, <code>str</code>, and <code>int</code>. Due to the recursive nature of JSON
+objects, their type is still <a href="https://github.com/python/typing/issues/182">hard to
+express</a> in Python, and is usually
+given as <a href="https://docs.python.org/3/library/typing.html#the-any-type">Any</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#f92672">from</span> typing <span style="color:#f92672">import</span> Any
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>(language: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;en&#34;</span>) <span style="color:#f92672">-&gt;</span> Any: <span style="color:#f92672">...</span></code></pre></div>
+<p>You can think of the enigmatic <code>Any</code> type as a box which can hold <em>any</em> type on
+the inside, but behaves like <em>all</em> of the types on the outside. It is the most
+permissive kind of type you can apply to a variable, parameter, or return type
+in your program. Contrast this with <code>object</code>, which can also hold values of any
+type, but only supports the minimal interface that is common to all of them.</p>
+
+<h2 id="data-validation-using-desert-and-marshmallow">Data validation using Desert and Marshmallow</h2>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard06.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard06.jpg"/> </a>
+</figure>
+
+
+<p>Returning <code>Any</code> is unsatisfactory, because we know quite precisely <a href="https://en.wikipedia.org/api/rest_v1/#/">which JSON
+structures we can expect</a> from the
+Wikipedia API. An API contract is not a type guarantee, but you can turn it into
+one by validating the data you receive. This will also demonstrate some great
+ways to use type annotations <em>at runtime</em>.</p>
+
+<p>The first step is to define the target type for the validation. Currently, the
+function should return a dictionary with several keys, of which we are only
+interested in <code>title</code> and <code>extract</code>. But your program can do better than
+operating on a dictionary: Using
+<a href="https://docs.python.org/3/library/dataclasses.html">dataclasses</a> from the
+standard library, you can define a fully-featured data type in a concise and
+straightforward manner. Let&rsquo;s define a <code>wikipedia.Page</code> type for our
+application:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#f92672">from</span> dataclasses <span style="color:#f92672">import</span> dataclass
+
+
+<span style="color:#a6e22e">@dataclass</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Page</span>:
+    title: str
+    extract: str</code></pre></div>
+<p>We are going to return this data type from <code>wikipedia.random_page</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>(language: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;en&#34;</span>) <span style="color:#f92672">-&gt;</span> Page: <span style="color:#f92672">...</span></code></pre></div>
+<p>Data types have a beneficial influence on the structure of code bases. You can
+see this by adapting <code>console.main</code> to use <code>wikipedia.Page</code> instead of the raw
+dictionary. The body turns into a clear and concise three-liner:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/console.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>(language: str) <span style="color:#f92672">-&gt;</span> None:
+    <span style="color:#e6db74">&#34;&#34;&#34;The hypermodern Python project.&#34;&#34;&#34;</span>
+    page <span style="color:#f92672">=</span> wikipedia<span style="color:#f92672">.</span>random_page(language<span style="color:#f92672">=</span>language)
+
+    click<span style="color:#f92672">.</span>secho(page<span style="color:#f92672">.</span>title, fg<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;green&#34;</span>)
+    click<span style="color:#f92672">.</span>echo(textwrap<span style="color:#f92672">.</span>fill(page<span style="color:#f92672">.</span>extract))</code></pre></div>
+<p>Of course, we are still missing the actual code to create <code>wikipedia.Page</code>
+objects. Let&rsquo;s start with a test case, performing a simple runtime type check:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_wikipedia.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_random_page_returns_page</span>(mock_requests_get):
+    page <span style="color:#f92672">=</span> wikipedia<span style="color:#f92672">.</span>random_page()
+    <span style="color:#66d9ef">assert</span> isinstance(page, wikipedia<span style="color:#f92672">.</span>Page)</code></pre></div>
+<p>How are we going to turn JSON into <code>wikipedia.Page</code> objects? Enter
+<a href="https://marshmallow.readthedocs.io/">Marshmallow</a>: This library allows you to
+define schemas to serialize, deserialize and validate data. Used by countless
+applications, Marshmallow has also spawned an ecosystem of tools and libraries
+built on top of it. One of these libraries,
+<a href="https://desert.readthedocs.io/">Desert</a>, uses the type annotations of
+dataclasses to generate serialization schemas for them. (Another great data
+validation library using type annotations is
+<a href="https://python-typical.org/">typical</a>.)</p>
+
+<p>Add Desert and Marshmallow to your dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add desert marshmallow</code></pre></div>
+<p>You need to add the libraries to <code>mypy.ini</code> to avoid import errors:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># mypy.ini</span>
+<span style="color:#66d9ef">[mypy-desert,marshmallow,nox.*,pytest]</span>
+<span style="color:#a6e22e">ignore_missing_imports</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">True</span></code></pre></div>
+<p>The basic usage of Desert is shown in the following example:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># Generate a schema from a dataclass.</span>
+schema <span style="color:#f92672">=</span> desert<span style="color:#f92672">.</span>schema(Page)
+
+<span style="color:#75715e"># Use the schema to load data.</span>
+page <span style="color:#f92672">=</span> schema<span style="color:#f92672">.</span>load(data)</code></pre></div>
+<p>Our data type represents the Wikipedia page resource only partially. Marshmallow
+errs on the side of safety and raises a validation error when encountering
+unknown fields. However, you can tell it to ignore unknown fields via the <code>meta</code>
+keyword. Add the schema as a module-level variable:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#f92672">import</span> desert
+<span style="color:#f92672">import</span> marshmallow
+
+
+schema <span style="color:#f92672">=</span> desert<span style="color:#f92672">.</span>schema(Page, meta<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;unknown&#34;</span>: marshmallow<span style="color:#f92672">.</span>EXCLUDE})</code></pre></div>
+<p>Using the schema, we are ready to implement <code>wikipedia.random_page</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>(language: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;en&#34;</span>) <span style="color:#f92672">-&gt;</span> Page:
+    <span style="color:#f92672">...</span>
+    <span style="color:#66d9ef">with</span> requests<span style="color:#f92672">.</span>get(url) <span style="color:#66d9ef">as</span> response:
+        response<span style="color:#f92672">.</span>raise_for_status()
+        data <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span>json()
+        <span style="color:#66d9ef">return</span> schema<span style="color:#f92672">.</span>load(data)</code></pre></div>
+<p>Let&rsquo;s also handle validation errors gracefully by converting them to
+<code>ClickException</code>, as we did in <a href="../hypermodern-python-02-testing#example-cli-handling-exceptions-gracefully">chapter
+2</a>
+for request errors. For example, suppose that Wikipedia responds with a body of
+&ldquo;null&rdquo; instead of an actual resource, due to a fictitious bug.</p>
+
+<p>We can turn this scenario into a test case by configuring the <code>requests.get</code>
+mock to produce <code>None</code> as the JSON object, and using
+<a href="https://docs.pytest.org/en/stable/reference.html#pytest-raises">pytest.raises</a>
+to check for the correct exception:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_wikipedia.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_random_page_handles_validation_errors</span>(mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None:
+    mock_requests_get<span style="color:#f92672">.</span>return_value<span style="color:#f92672">.</span>__enter__<span style="color:#f92672">.</span>return_value<span style="color:#f92672">.</span>json<span style="color:#f92672">.</span>return_value <span style="color:#f92672">=</span> None
+    <span style="color:#66d9ef">with</span> pytest<span style="color:#f92672">.</span>raises(click<span style="color:#f92672">.</span>ClickException):
+        wikipedia<span style="color:#f92672">.</span>random_page()</code></pre></div>
+<p>Getting this to pass is a simple matter of adding <code>marshmallow.ValidationError</code>
+to the except clause:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#66d9ef">except</span> (requests<span style="color:#f92672">.</span>RequestException, marshmallow<span style="color:#f92672">.</span>ValidationError) <span style="color:#66d9ef">as</span> error:</code></pre></div>
+<p>This completes the implementation. Here is the <code>wikipedia</code> module with type
+annotations and validation:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#f92672">from</span> dataclasses <span style="color:#f92672">import</span> dataclass
+
+<span style="color:#f92672">import</span> click
+<span style="color:#f92672">import</span> desert
+<span style="color:#f92672">import</span> marshmallow
+<span style="color:#f92672">import</span> requests
+
+
+API_URL: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;https://{language}.wikipedia.org/api/rest_v1/page/random/summary&#34;</span>
+
+
+<span style="color:#a6e22e">@dataclass</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Page</span>:
+    title: str
+    extract: str
+
+
+schema <span style="color:#f92672">=</span> desert<span style="color:#f92672">.</span>schema(Page, meta<span style="color:#f92672">=</span>{<span style="color:#e6db74">&#34;unknown&#34;</span>: marshmallow<span style="color:#f92672">.</span>EXCLUDE})
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>(language: str <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;en&#34;</span>) <span style="color:#f92672">-&gt;</span> Page:
+    url <span style="color:#f92672">=</span> API_URL<span style="color:#f92672">.</span>format(language<span style="color:#f92672">=</span>language)
+
+    <span style="color:#66d9ef">try</span>:
+        <span style="color:#66d9ef">with</span> requests<span style="color:#f92672">.</span>get(url) <span style="color:#66d9ef">as</span> response:
+            response<span style="color:#f92672">.</span>raise_for_status()
+            data <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span>json()
+            <span style="color:#66d9ef">return</span> schema<span style="color:#f92672">.</span>load(data)
+    <span style="color:#66d9ef">except</span> (requests<span style="color:#f92672">.</span>RequestException, marshmallow<span style="color:#f92672">.</span>ValidationError) <span style="color:#66d9ef">as</span> error:
+        message <span style="color:#f92672">=</span> str(error)
+        <span style="color:#66d9ef">raise</span> click<span style="color:#f92672">.</span>ClickException(message)</code></pre></div>
+<h2 id="runtime-type-checking-with-typeguard">Runtime type checking with Typeguard</h2>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard10.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard10.jpg"/> </a>
+</figure>
+
+
+<p><a href="https://github.com/agronholm/typeguard">Typeguard</a> is a runtime type checker
+for Python: It checks that arguments match parameter types of annotated
+functions as your program is being executed (and similarly for return values).
+Runtime type checking can be a valuable tool when it is impossible or
+impractical to strictly type an entire code path, for example when crossing
+system boundaries or interfacing with other libraries.</p>
+
+<p>Here is an example of a type-related bug which can be caught by a runtime type
+checker, but is not detected by mypy or pytype because the incorrectly typed
+argument is loaded from JSON. (Do not add this test function to your test suite
+permanently; it&rsquo;s for demonstration purposes only.)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_wikipedia.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_trigger_typeguard</span>(mock_requests_get):
+    <span style="color:#f92672">import</span> json
+
+    data <span style="color:#f92672">=</span> json<span style="color:#f92672">.</span>loads(<span style="color:#e6db74">&#39;{ &#34;language&#34;: 1 }&#39;</span>)
+    wikipedia<span style="color:#f92672">.</span>random_page(language<span style="color:#f92672">=</span>data[<span style="color:#e6db74">&#34;language&#34;</span>])</code></pre></div>
+<p>Add typeguard to your development dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev typeguard</code></pre></div>
+<p>Typeguard comes with a Pytest plugin which instruments your package for type
+checking while you run the test suite. You can enable it by passing the
+<code>--typeguard-packages</code> option with the name of your package. Add a Nox session
+to run the test suite with runtime type checking:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+package <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;hypermodern_python&#34;</span>
+
+
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;3.8&#34;</span>, <span style="color:#e6db74">&#34;3.7&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">typeguard</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> [<span style="color:#e6db74">&#34;-m&#34;</span>, <span style="color:#e6db74">&#34;not e2e&#34;</span>]
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74">&#34;poetry&#34;</span>, <span style="color:#e6db74">&#34;install&#34;</span>, <span style="color:#e6db74">&#34;--no-dev&#34;</span>, external<span style="color:#f92672">=</span>True)
+    install_with_constraints(session, <span style="color:#e6db74">&#34;pytest&#34;</span>, <span style="color:#e6db74">&#34;pytest-mock&#34;</span>, <span style="color:#e6db74">&#34;typeguard&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74">&#34;pytest&#34;</span>, f<span style="color:#e6db74">&#34;--typeguard-packages={package}&#34;</span>, <span style="color:#f92672">*</span>args)</code></pre></div>
+<p>Run the Nox session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs typeguard</code></pre></div>
+<p>Typeguard catches the bug we introduced at the start of this section. You will
+also notice a warning about missing type annotations for a Click object. This is
+due to the fact that <code>console.main</code> is wrapped by a decorator, and its type
+annotations only apply to the inner function, not the resulting object as seen
+by the test suite.</p>
+
+<h2 id="increasing-type-coverage-with-flake8-annotations">Increasing type coverage with flake8-annotations</h2>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard07.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard07.jpg"/> </a>
+</figure>
+
+
+<p><a href="https://github.com/python-discord/flake8-annotations">flake8-annotations</a> is a
+Flake8 plugin that detects the absence of type annotations for functions,
+helping you keep track of unannotated code.</p>
+
+<p>Add the plugin to your development dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev flake8-annotations</code></pre></div>
+<p>Install the plugin into the linting session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74">&#34;3.8&#34;</span>, <span style="color:#e6db74">&#34;3.7&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    install_with_constraints(
+        session,
+        <span style="color:#e6db74">&#34;flake8&#34;</span>,
+        <span style="color:#e6db74">&#34;flake8-annotations&#34;</span>,
+        <span style="color:#e6db74">&#34;flake8-bandit&#34;</span>,
+        <span style="color:#e6db74">&#34;flake8-black&#34;</span>,
+        <span style="color:#e6db74">&#34;flake8-bugbear&#34;</span>,
+        <span style="color:#e6db74">&#34;flake8-import-order&#34;</span>,
+    )
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74">&#34;flake8&#34;</span>, <span style="color:#f92672">*</span>args)</code></pre></div>
+<p>Configure Flake8 to switch on the warnings generated by the plugin (<code>TYP</code> like
+<em>type</em>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">select</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">B,B9,BLK,C,E,F,I,S,TYP,W</span></code></pre></div>
+<p>Run the lint session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs lint</code></pre></div>
+<p>The plugin spews out a multitude of warnings about missing type annotations in
+the Nox sessions and the test suite. It is possible to disable warnings for
+these locations using Flake8&rsquo;s <code>per-file-ignores</code> option:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">per-file-ignores</span> <span style="color:#f92672">=</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">    tests/*:S101,TYP
+</span><span style="color:#e6db74">    noxfile.py:TYP</span></code></pre></div>
+<h2 id="adding-type-annotations-to-nox-sessions">Adding type annotations to Nox sessions</h2>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard03.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard03.jpg"/> </a>
+</figure>
+
+
+<!--
+Identifying the types associated with a third-party package still requires a
+little research sometimes. If the project does not document its types, you may
+need to take a look at their source code. For some packages, type annotations
+are distributed separately, in the community-driven
+[typeshed](https://github.com/python/typeshed) or in a package named `foo-stubs`
+(where `foo` is the original package).
+-->
+
+<p>In this section, I show you how to add type annotations to Nox sessions. If you
+disabled type coverage warnings (<code>TYP</code>) for Nox sessions, re-enable them for the
+purposes of this section.</p>
+
+<p>The central type for Nox sessions is <code>nox.sessions.Session</code>, which is also the
+first and only argument of your session functions. The return value of these
+functions is <code>None</code>&mdash;the implicit return value of every Python function that
+does not explicitly return anything. Annotate your session functions like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#f92672">from</span> nox.sessions <span style="color:#f92672">import</span> Session
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">black</span>(session: Session) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session: Session) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">safety</span>(session: Session) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mypy</span>(session: Session) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pytype</span>(session: Session) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tests</span>(session: Session) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">typeguard</span>(session: Session) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span></code></pre></div>
+<p>Our helper function <code>install_with_constraints</code> is a wrapper for
+<code>Session.install</code>. The positional arguments of this function are the
+command-line arguments for <a href="https://pip.pypa.io/">pip</a>, so their type is <code>str</code>.
+The keyword arguments are the same as for <a href="https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.run">Session.run</a>. Instead
+of listing their types individually, we&rsquo;ll be pragmatic and type them as <code>Any</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">install_with_constraints</span>(session: Session, <span style="color:#f92672">*</span>args: str, <span style="color:#f92672">**</span>kwargs: Any) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span></code></pre></div>
+<h2 id="adding-type-annotations-to-the-test-suite">Adding type annotations to the test suite</h2>
+
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-04/beard08.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/beard08.jpg"/> </a>
+</figure>
+
+
+<p>In this section, I show you how to add type annotations to the test suite. If
+you disabled type coverage warnings (<code>TYP</code>) for the test suite, re-enable them
+for the purposes of this section.</p>
+
+<p>Test functions in Pytest use parameters to declare fixtures they use. Typing
+them is simpler than it may seem: You don&rsquo;t specify the type of the fixture
+itself, but the type of the value that the fixture supplies to the test
+function. For example, the <code>mock_requests_get</code> fixture returns a standard mock
+object of type
+<a href="https://docs.python.org/3/library/unittest.mock.html#unittest.mock.Mock">unittest.mock.Mock</a>.
+(The actual type is
+<a href="https://docs.python.org/3/library/unittest.mock.html#unittest.mock.MagicMock">unittest.mock.MagicMock</a>,
+but you can use the more general type to annotate your test functions.)</p>
+
+<p>Let&rsquo;s start by annotating the test functions in the <code>wikipedia</code> test module:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_wikipedia.py</span>
+<span style="color:#f92672">from</span> unittest.mock <span style="color:#f92672">import</span> Mock
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_random_page_uses_given_language</span>(mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_random_page_returns_page</span>(mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_random_page_handles_validation_errors</span>(mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span></code></pre></div>
+<p>Next, let&rsquo;s annotate <code>mock_requests_get</code> itself. The return type of this
+function is the same <code>unittest.mock.Mock</code>. The function takes a single argument,
+the <code>mocker</code> fixture from
+<a href="https://github.com/pytest-dev/pytest-mock">pytest-mock</a>, which is of type
+<code>pytest_mock.MockFixture</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/conftest.py</span>
+<span style="color:#f92672">from</span> unittest.mock <span style="color:#f92672">import</span> Mock
+
+<span style="color:#f92672">from</span> pytest_mock <span style="color:#f92672">import</span> MockFixture
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mock_requests_get</span>(mocker: MockFixture) <span style="color:#f92672">-&gt;</span> Mock: <span style="color:#f92672">...</span></code></pre></div>
+<p>Configure mypy to ignore the missing import for <code>pytest_mock</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># mypy.ini</span>
+<span style="color:#66d9ef">[mypy-desert,marshmallow,nox.*,pytest,pytest_mock]</span>
+<span style="color:#a6e22e">ignore_missing_imports</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">True</span></code></pre></div>
+<p>Use the same type signature for the mock fixture in the <code>console</code> test module:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#f92672">from</span> unittest.mock <span style="color:#f92672">import</span> Mock
+
+<span style="color:#f92672">from</span> pytest_mock <span style="color:#f92672">import</span> MockFixture
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mock_wikipedia_random_page</span>(mocker: MockFixture) <span style="color:#f92672">-&gt;</span> Mock: <span style="color:#f92672">...</span></code></pre></div>
+<p>The test module for <code>console</code> also defines a simple fixture returning a
+<code>click.testing.CliRunner</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#f92672">from</span> click.testing <span style="color:#f92672">import</span> CliRunner
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">runner</span>() <span style="color:#f92672">-&gt;</span> CliRunner: <span style="color:#f92672">...</span></code></pre></div>
+<p>Typing the test functions for <code>console</code> is now straightforward:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#f92672">from</span> unittest.mock <span style="color:#f92672">import</span> Mock
+
+<span style="color:#f92672">from</span> click.testing <span style="color:#f92672">import</span> CliRunner
+<span style="color:#f92672">from</span> pytest_mock <span style="color:#f92672">import</span> MockFixture
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_succeeds</span>(runner: CliRunner, mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_succeeds_in_production_env</span>(runner: CliRunner) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_prints_title</span>(runner: CliRunner, mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_invokes_requests_get</span>(runner: CliRunner, mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_uses_en_wikipedia_org</span>(runner: CliRunner, mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_uses_specified_language</span>(runner: CliRunner, mock_wikipedia_random_page: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_fails_on_request_error</span>(runner: CliRunner, mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_prints_message_on_request_error</span>(runner: CliRunner, mock_requests_get: Mock) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span></code></pre></div>
+<p>The missing piece to achieve full type coverage (as far as the Flake8
+annotations plugin is concerned) is the <code>pytest_configure</code> hook. The function
+takes a Pytest configuration object as its single parameter. Unfortunately, the
+type of this object is not
+(<a href="https://github.com/pytest-dev/pytest/issues/3342">yet</a>) part of Pytest&rsquo;s
+public interface. You have the choice of using <code>Any</code> or reaching into Pytest&rsquo;s
+internals to import <code>_pytest.config.Config</code>. Let&rsquo;s opt for the latter:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/conftest.py</span>
+<span style="color:#f92672">from</span> _pytest.config <span style="color:#f92672">import</span> Config
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pytest_configure</span>(config: Config) <span style="color:#f92672">-&gt;</span> None: <span style="color:#f92672">...</span></code></pre></div>
+<p>You also need to tell mypy to ignore missing imports for <code>_pytest.*</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># mypy.ini</span>
+<span style="color:#66d9ef">[mypy-desert,marshmallow,nox.*,pytest,pytest_mock,_pytest.*]</span>
+<span style="color:#a6e22e">ignore_missing_imports</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">True</span></code></pre></div>
+<p>This concludes our foray into the Python type system. Type annotations make your
+programs easier to understand, debug, and maintain. Static type checkers use
+type annotations and type inference to verify the type correctness of your
+program without executing it, helping you discover many bugs that would
+otherwise go unnoticed. An increasing number of libraries leverage the power of
+type annotations at runtime, for example to validate data. Happy typing!</p>
+
+<h2 id="thanks-for-reading">Thanks for reading!</h2>
+
+<p>The next chapter is about adding documentation for your project. It will be
+published on January 29, 2020.</p>
+
+<p><figure class="centered">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/train.jpg"/> 
+</figure>
+
+<!-- 
+<figure class="centered"><a href="../hypermodern-python-05-documentation">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-04/train.jpg"/> </a>
+</figure>
+
+<span class="centered">[Continue to the next chapter](../hypermodern-python-05-documentation)</span>
+--></p>
+<div class="footnotes">
+
+<hr />
+
+<ol>
+<li id="fn:1"><p>The images in this chapter are details from illustrations to the book <em>A
+Journey in Other Worlds: A Romance of the Future</em> by John Jacob Astor, 1894
+(source: <a href="https://archive.org/details/journeyinotherwo00astouoft">The Internet
+Archive</a>). Dan Beard
+later went on to found the Boy Scouts of America, while John Jacob Astor
+built the Astoria Hotel in New York City&mdash;predecessor of the
+Waldorf-Astoria Hotel&mdash;and perished as the richest man on board the RMS
+Titanic.</p>
+ <a class="footnote-return" href="#fnref:1"><sup>[return]</sup></a></li>
+</ol>
+</div>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+
+  </body>
+
+</html>
