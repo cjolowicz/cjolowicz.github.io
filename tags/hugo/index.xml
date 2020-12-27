@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>hugo on Claudio Jolowicz</title>
+    <link>https://cjolowicz.github.io/tags/hugo/</link>
+    <description>Recent content in hugo on Claudio Jolowicz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Sat, 27 Apr 2019 10:48:29 +0200</lastBuildDate>
+    
+	<atom:link href="https://cjolowicz.github.io/tags/hugo/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hosting a Hugo blog on GitHub Pages with Travis CI</title>
+      <link>https://cjolowicz.github.io/posts/hosting-a-hugo-blog-on-github-pages-with-travis-ci/</link>
+      <pubDate>Sat, 27 Apr 2019 10:48:29 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hosting-a-hugo-blog-on-github-pages-with-travis-ci/</guid>
+      <description>This post describes how to set up a blog using Hugo, an open-source static site generator. The blog is hosted on GitHub Pages, a web hosting service offered by GitHub. The Travis CI continuous integration service is used to deploy changes to the blog.
+ This post is based on Artem Sidorenko&amp;rsquo;s article Hugo on GitHub Pages with Travis CI.
+ Contents
+ Overview Installing Hugo Setting up the blog repository Setting up the github.</description>
+    </item>
+    
+  </channel>
+</rss>

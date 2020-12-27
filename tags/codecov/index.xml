@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Codecov on Claudio Jolowicz</title>
+    <link>https://cjolowicz.github.io/tags/codecov/</link>
+    <description>Recent content in Codecov on Claudio Jolowicz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 05 Feb 2020 17:41:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://cjolowicz.github.io/tags/codecov/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hypermodern Python Chapter 6: CI/CD</title>
+      <link>https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/</guid>
+      <description>Read this article on Medium
+  In this sixth and last installment of the Hypermodern Python series, I&amp;rsquo;m going to discuss how to add continuous integration and delivery to your project using GitHub Actions, Poetry, and Nox.1 In the previous chapter, we discussed how to add documentation. (If you start reading here, you can also download the code for the previous chapter.)
+Here are the topics covered in this chapter on Continuous Integration and Delivery:</description>
+    </item>
+    
+  </channel>
+</rss>

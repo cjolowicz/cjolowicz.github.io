@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>docker on Claudio Jolowicz</title>
+    <link>https://cjolowicz.github.io/tags/docker/</link>
+    <description>Recent content in docker on Claudio Jolowicz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Thu, 23 May 2019 09:08:59 +0200</lastBuildDate>
+    
+	<atom:link href="https://cjolowicz.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Incremental Docker builds for monolithic codebases</title>
+      <link>https://cjolowicz.github.io/posts/incremental-docker-builds-for-monolithic-codebases/</link>
+      <pubDate>Thu, 23 May 2019 09:08:59 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/incremental-docker-builds-for-monolithic-codebases/</guid>
+      <description>As a developer working on a monolithic codebase, how can you use Docker to build and deploy the projects contained in it? If you take the naive approach, you quickly run into problems with bloated images and frequent rebuilds of the entire source tree.
+In this post, I show you how to build images from monorepos incrementally, reusing previous builds beyond the Docker build cache. The solution I describe avoids code duplication, reduces image size, and speeds up builds dramatically.</description>
+    </item>
+    
+  </channel>
+</rss>

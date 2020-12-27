@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Claudio Jolowicz">
+    <meta name="description" content="Claudio Jolowicz&#39;s website">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hypermodern Python Chapter 6: CI/CD"/>
+<meta name="twitter:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism."/>
+
+    <meta property="og:title" content="Hypermodern Python Chapter 6: CI/CD" />
+<meta property="og:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/" />
+<meta property="article:published_time" content="2020-02-05T17:41:00+02:00" />
+<meta property="article:modified_time" content="2020-02-05T17:41:00+02:00" />
+
+
+    
+      <base href="https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/">
+    
+    <title>
+  Hypermodern Python Chapter 6: CI/CD · Claudio Jolowicz
+</title>
+
+    
+      <link rel="canonical" href="https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://cjolowicz.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://cjolowicz.github.io/">
+      Claudio Jolowicz
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://cjolowicz.github.io/posts/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="http://claudiojolowicz.com/">Music</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Hypermodern Python Chapter 6: CI/CD</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-02-05T17:41:00&#43;02:00'>
+                February 5, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              14 minutes read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://cjolowicz.github.io/tags/python/">Python</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/github-actions/">GitHub Actions</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/codecov/">Codecov</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/pypi/">PyPI</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/testpypi/">TestPyPI</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/read-the-docs/">Read the Docs</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/poetry/">Poetry</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/nox/">Nox</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <p><a href="https://medium.com/@cjolowicz/hypermodern-python-6-ci-cd-b233accfa2f6">Read this article on Medium</a></p>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa01.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa01.jpg"/> </a>
+</figure>
+
+<p>In this sixth and last installment of the Hypermodern Python series,
+I&rsquo;m going to discuss
+how to add continuous integration and delivery to your project
+using GitHub Actions, Poetry, and Nox.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>
+In the <a href="../hypermodern-python-05-documentation">previous chapter</a>, we discussed
+how to add documentation.
+(If you start reading here,
+you can also
+<a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter05.zip">download the code</a>
+for the previous chapter.)</p>
+<p>Here are the topics covered in this chapter on
+Continuous Integration and Delivery:</p>
+<ul>
+<li><a href="#continuous-integration-using-github-actions">Continuous integration using GitHub Actions</a></li>
+<li><a href="#coverage-reporting-with-codecov">Coverage reporting with Codecov</a></li>
+<li><a href="#uploading-your-package-to-pypi">Uploading your package to PyPI</a></li>
+<li><a href="#documenting-releases-with-release-drafter">Documenting releases with Release Drafter</a></li>
+<li><a href="#single-sourcing-the-package-version">Single-sourcing the package version</a></li>
+<li><a href="#uploading-your-package-to-testpypi">Uploading your package to TestPyPI</a></li>
+<li><a href="#hosting-documentation-at-read-the-docs">Hosting documentation at Read the Docs</a></li>
+<li><a href="#conclusion">Conclusion</a></li>
+</ul>
+<p>Here is a full list of the articles in this series:</p>
+<ul>
+<li><a href="../hypermodern-python-01-setup">Chapter 1: Setup</a></li>
+<li><a href="../hypermodern-python-02-testing">Chapter 2: Testing</a></li>
+<li><a href="../hypermodern-python-03-linting">Chapter 3: Linting</a></li>
+<li><a href="../hypermodern-python-04-typing">Chapter 4: Typing</a></li>
+<li><a href="../hypermodern-python-05-documentation">Chapter 5: Documentation</a></li>
+<li><a href="../hypermodern-python-06-ci-cd">Chapter 6: CI/CD</a> (this article)</li>
+</ul>
+<p>This guide has a companion repository:
+<a href="https://github.com/cjolowicz/hypermodern-python">cjolowicz/hypermodern-python</a>.
+Each article in the guide corresponds to a set of commits in the GitHub repository:</p>
+<ul>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/compare/chapter05...chapter06">View changes</a></li>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter06.zip">Download code</a></li>
+</ul>
+<h2 id="continuous-integration-using-github-actions">Continuous integration using GitHub Actions</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa02.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa02.jpg"/> </a>
+</figure>
+
+<p><em>Continuous integration</em> (CI) helps you
+automate the integration of code changes into your project.
+When changes are pushed to the project repository,
+the CI server verifies their correctness,
+triggering tools such as unit tests, linters, or type checkers.</p>
+<p><a href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests">Pull Requests</a>
+are an important building block in this workflow.
+They let you propose a set of changes to the repository,
+for example a specific bugfix or new feature.
+When the pull request gets accepted,
+its changes are merged into the target branch,
+typically master.
+GitHub displays Pull Requests with a green tick if they pass CI,
+and with a red x if the CI pipeline failed.
+In this way,
+continuous integration functions as a gate commits need to pass
+to enter the master branch.</p>
+<p>You have a plethora of options when it comes to continuous integration.
+Traditionally, many open-source projects have employed
+<a href="https://travis-ci.com">Travis CI</a>.
+Another popular choice are Microsoft&rsquo;s
+<a href="https://azure.microsoft.com/en-us/services/devops/pipelines/">Azure Pipelines</a>.
+In this guide, we use GitHub&rsquo;s own offering,
+<a href="https://github.com/features/actions">GitHub Actions</a>.</p>
+<p>Configure GitHub Actions by
+adding the following <a href="https://yaml.org">YAML</a> file
+to the <code>.github/workflows</code> directory:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .github/workflows/tests.yml</span>
+<span style="color:#66d9ef">name</span>: Tests
+<span style="color:#66d9ef">on</span>: push
+<span style="color:#66d9ef">jobs</span>:
+  <span style="color:#66d9ef">tests</span>:
+    <span style="color:#66d9ef">runs-on</span>: ubuntu-latest
+    <span style="color:#66d9ef">steps</span>:
+    - <span style="color:#66d9ef">uses</span>: actions/checkout@v2
+    - <span style="color:#66d9ef">uses</span>: actions/setup-python@v1
+      <span style="color:#66d9ef">with</span>:
+        <span style="color:#66d9ef">python-version</span>: <span style="color:#ae81ff">3.8</span>
+        <span style="color:#66d9ef">architecture</span>: x64
+    - <span style="color:#66d9ef">run</span>: pip install nox==<span style="color:#ae81ff">2019.11</span><span style="color:#ae81ff">.9</span>
+    - <span style="color:#66d9ef">run</span>: pip install poetry==<span style="color:#ae81ff">1.0</span><span style="color:#ae81ff">.5</span>
+    - <span style="color:#66d9ef">run</span>: nox
+</code></pre></div><p>This file defines a so-called <em>workflow</em>.
+A workflow is an automated process
+executing a series of steps,
+grouped into one or many jobs.
+Workflows are triggered by events,
+for example when someone pushes a commit to a repository,
+or when someone creates a pull request, an issue, or a release.</p>
+<p>The workflow above
+is triggered on every push to your GitHub repository, and
+executes the test suite using Nox.
+It
+is aptly named &ldquo;Tests&rdquo;,
+and consists of a single job
+running on the latest supported <a href="https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners#supported-runners-and-hardware-resources">Ubuntu image</a>.
+The job executes five steps,
+using either official GitHub Actions or
+invoking shell commands:</p>
+<ol>
+<li>Check out your repository using <a href="https://github.com/actions/checkout">actions/checkout</a>.</li>
+<li>Install Python 3.8 using <a href="https://github.com/actions/setup-python">actions/setup-python</a>.</li>
+<li>Install Nox with pip.</li>
+<li>Install Poetry with pip.</li>
+<li>Run your test suite with Nox.</li>
+</ol>
+<p>You can learn more about the workflow language and its supported keywords in the
+<a href="https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions">official reference</a>.</p>
+<p>Every tool used in the CI process is pinned to a specific version.
+The reasoning behind this is that
+a CI process should be predictable and deterministic.
+There is a common fallacy that
+you should always use the latest version of a specific tool,
+and therefore that tool should not be pinned.</p>
+<p>By all means, use the latest versions of your tools,
+but be explicit about it.
+This gives your project a higher level of auditability,
+and prevents things from magically breaking and un-breaking in CI.
+Upgrading tools in a dedicated pull request
+also lets you investigate the impact of an upgrade,
+rather than breaking your entire CI
+when a new version becomes available.</p>
+<p>The workflow currently uses Python 3.8 only,
+but you should really
+test your project on all Python versions it supports.
+You can achieve this using a <em>build matrix</em>.
+A build matrix lets you define variables,
+such as for the operating system or for the Python version,
+and specify multiple values for them.
+Jobs can reference these variables,
+and are instantiated for every combination of values.</p>
+<p>Let&rsquo;s define a build matrix for the Python versions
+supported by the project (Python 3.7 and 3.8).
+Use the <a href="https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idstrategy">strategy</a> and <a href="https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#jobsjob_idstrategymatrix">matrix</a> keywords
+to define a build matrix with a <code>python-version</code> variable,
+and reference the variable using the syntax <code>${{ matrix.python-version }}</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .github/workflows/tests.yml</span>
+<span style="color:#66d9ef">name</span>: Tests
+<span style="color:#66d9ef">on</span>: push
+<span style="color:#66d9ef">jobs</span>:
+  <span style="color:#66d9ef">tests</span>:
+    <span style="color:#66d9ef">runs-on</span>: ubuntu-latest
+<span style="display:block;width:100%;background-color:#3c3d38">    <span style="color:#66d9ef">strategy</span>:
+</span><span style="display:block;width:100%;background-color:#3c3d38">      <span style="color:#66d9ef">matrix</span>:
+</span><span style="display:block;width:100%;background-color:#3c3d38">        <span style="color:#66d9ef">python-version</span>: [<span style="color:#e6db74">&#39;3.7&#39;</span>, <span style="color:#e6db74">&#39;3.8&#39;</span>]
+</span><span style="display:block;width:100%;background-color:#3c3d38">    <span style="color:#66d9ef">name</span>: Python ${{ matrix.python-version }}
+</span>    <span style="color:#66d9ef">steps</span>:
+    - <span style="color:#66d9ef">uses</span>: actions/checkout@v2
+    - <span style="color:#66d9ef">uses</span>: actions/setup-python@v1
+      <span style="color:#66d9ef">with</span>:
+<span style="display:block;width:100%;background-color:#3c3d38">        <span style="color:#66d9ef">python-version</span>: ${{ matrix.python-version }}
+</span>        <span style="color:#66d9ef">architecture</span>: x64
+    - <span style="color:#66d9ef">run</span>: pip install nox==<span style="color:#ae81ff">2019.11</span><span style="color:#ae81ff">.9</span>
+    - <span style="color:#66d9ef">run</span>: pip install poetry==<span style="color:#ae81ff">1.0</span><span style="color:#ae81ff">.5</span>
+    - <span style="color:#66d9ef">run</span>: nox
+</code></pre></div><p>If you commit and push now,
+you can watch the workflow execute
+under the <em>Actions</em> tab in your GitHub repository,
+with a separate job for each Python version.</p>
+<p>You should also add a GitHub Actions badge to your repository page.
+The badge indicates whether the tests are passing or failing on the master branch,
+and links to the GitHub Actions dashboard for your project.
+It looks like this:</p>
+<figure class="centered"><a href="https://github.com/cjolowicz/hypermodern-python/actions?workflow=Tests">
+    <img src="https://github.com/cjolowicz/hypermodern-python/workflows/Tests/badge.svg"/> </a>
+</figure>
+
+<p>Add the line below to the top of your <code>README.md</code> to display the badge:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">[<span style="color:#f92672">![Tests</span>](<span style="color:#a6e22e">https://github.com/&lt;your-username&gt;/hypermodern-python/workflows/Tests/badge.svg</span>)](https://github.com/&lt;your-username&gt;/hypermodern-python/actions?workflow=Tests)
+</code></pre></div><h2 id="coverage-reporting-with-codecov">Coverage reporting with Codecov</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa03.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa03.jpg"/> </a>
+</figure>
+
+<p><a href="../hypermodern-python-02-testing#code-coverage-with-coveragepy">Earlier</a>,
+we configured the test suite to fail
+if code coverage drops below 100%.
+A coverage reporting service offers some additional benefits,
+by making code coverage more visible:</p>
+<ul>
+<li>Pull requests get automated comments
+with a quick rundown of how the changes affect coverage.</li>
+<li>The site visualizes code coverage
+for every commit and file in your repository,
+using graphs and code listings.</li>
+<li>You can display code coverage on your repository page,
+using a badge.</li>
+</ul>
+<p>In this section,
+we use <a href="https://codecov.io/">Codecov</a> for coverage reporting;
+another common option is <a href="https://coveralls.io/">Coveralls</a>.
+Sign up at Codecov,
+install their GitHub app,
+and add your repository to Codecov.
+The sign up process will guide you through these steps.</p>
+<p>Add the official <a href="https://github.com/codecov/codecov-python">codecov CLI</a>
+to your development dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev codecov
+</code></pre></div><p>Add the Nox session shown below.
+The session exports the coverage data to
+<a href="https://cobertura.github.io/cobertura/">cobertura</a> XML format,
+which is the format expected by Codecov.
+It then uses <code>codecov</code> to upload the coverage data.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">coverage</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Upload coverage data.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+    install_with_constraints(session, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">coverage[toml]</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">codecov</span><span style="color:#e6db74">&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">coverage</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">xml</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--fail-under=0</span><span style="color:#e6db74">&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">codecov</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>session<span style="color:#f92672">.</span>posargs)
+</code></pre></div><p>Note that you need to disable the coverage minimum
+using the command-line option <code>--fail-under=0</code>.
+Otherwise, you would only get coverage reports
+when coverage is at 100%,
+defeating their very purpose.</p>
+<p>Next, grant GitHub Actions access to upload to Codecov:</p>
+<ol>
+<li>Go to your repository settings on Codecov,
+and copy the <em>Repository Upload Token</em>.</li>
+<li>Go to your repository settings on GitHub,
+and add a secret named <code>CODECOV_TOKEN</code> with the token you just copied.</li>
+</ol>
+<p>Add the following GitHub workflow to upload coverage data:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .github/workflows/coverage.yml</span>
+<span style="color:#66d9ef">name</span>: Coverage
+<span style="color:#66d9ef">on</span>: push
+<span style="color:#66d9ef">jobs</span>:
+  <span style="color:#66d9ef">coverage</span>:
+    <span style="color:#66d9ef">runs-on</span>: ubuntu-latest
+    <span style="color:#66d9ef">steps</span>:
+    - <span style="color:#66d9ef">uses</span>: actions/checkout@v2
+    - <span style="color:#66d9ef">uses</span>: actions/setup-python@v1
+      <span style="color:#66d9ef">with</span>:
+        <span style="color:#66d9ef">python-version</span>: <span style="color:#e6db74">&#39;3.8&#39;</span>
+        <span style="color:#66d9ef">architecture</span>: x64
+    - <span style="color:#66d9ef">run</span>: pip install nox==<span style="color:#ae81ff">2019.11</span><span style="color:#ae81ff">.9</span>
+    - <span style="color:#66d9ef">run</span>: pip install poetry==<span style="color:#ae81ff">1.0</span><span style="color:#ae81ff">.5</span>
+    - <span style="color:#66d9ef">run</span>: nox --sessions tests<span style="color:#ae81ff">-3.8</span> coverage
+      <span style="color:#66d9ef">env</span>:
+        <span style="color:#66d9ef">CODECOV_TOKEN</span>: ${{secrets.CODECOV_TOKEN}}
+</code></pre></div><p>In contrast to the Tests workflow,
+the Coverage workflow only runs on Python 3.8.
+It invokes Nox to execute the test suite and upload the coverage data,
+providing the Codecov token as an environment variable.</p>
+<p>Add the Codecov badge to your <code>README.md</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">[<span style="color:#f92672">![Codecov</span>](<span style="color:#a6e22e">https://codecov.io/gh/&lt;your-username&gt;/hypermodern-python/branch/master/graph/badge.svg</span>)](https://codecov.io/gh/&lt;your-username&gt;/hypermodern-python)
+</code></pre></div><p>The badge looks like this:</p>
+<figure class="centered"><a href="https://codecov.io/gh/cjolowicz/hypermodern-python">
+    <img src="https://codecov.io/gh/cjolowicz/hypermodern-python/branch/master/graph/badge.svg"/> </a>
+</figure>
+
+<h2 id="uploading-your-package-to-pypi">Uploading your package to PyPI</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa04.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa04.jpg"/> </a>
+</figure>
+
+<p><a href="https://pypi.org/">PyPI</a> is the official Python package registry,
+also known by its affectionate nickname
+&ldquo;<a href="https://en.wikipedia.org/wiki/Cheese_Shop_sketch">the Cheese Shop</a>&quot;.
+Uploading your package to PyPI allows others to
+install it with <a href="https://pip.readthedocs.org/">pip</a>, like so:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">pip install hypermodern-python
+</code></pre></div><p>Before you can upload your Python package,
+you need to generate <em>distribution packages</em>.
+These are compressed archives which
+an end-user can download and install on their system.
+They come in two flavours:
+source (or <em>sdist</em>) archives, and
+binary packages
+in the <a href="https://www.python.org/dev/peps/pep-0427/">wheel</a> format.
+Poetry supports generating both with the
+<a href="https://python-poetry.org/docs/cli/#build">poetry build</a> command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ poetry build
+
+Building hypermodern-python <span style="color:#f92672">(</span>0.1.0<span style="color:#f92672">)</span>
+ - Building sdist
+ - Built hypermodern-python-0.1.0.tar.gz
+
+ - Building wheel
+ - Built hypermodern_python-0.1.0-py3-none-any.whl
+</code></pre></div><p>Poetry also supports uploading your package to PyPI,
+with the
+<a href="https://python-poetry.org/docs/cli/#publish">poetry publish</a> command.
+Here&rsquo;s what it would look like
+if you uploaded your package now:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ poetry publish
+
+Publishing hypermodern-python <span style="color:#f92672">(</span>0.1.0<span style="color:#f92672">)</span> to PyPI
+Username: &lt;your-username&gt;
+Password:
+ - Uploading hypermodern-python-0.1.0.tar.gz 100%
+ - Uploading hypermodern_python-0.1.0-py3-none-any.whl 100%
+</code></pre></div><p>In the remainder of this section,
+we are going to automate the PyPI release process.
+Automation helps you ensure
+your Python package passes all checks
+before it is published,
+and keeps the build and upload process itself reliable.</p>
+<p>Sign up at <a href="https://pypi.org/">PyPI</a>,
+and enable two-factor authentication
+for an additional layer of security.
+Next, grant GitHub Actions permission to upload to PyPI:</p>
+<ol>
+<li>Go to the Account Settings on PyPI,
+generate an API token,
+and copy it.</li>
+<li>Go to the repository settings on GitHub,
+and add a secret named <code>PYPI_TOKEN</code>
+with the token you just copied.</li>
+</ol>
+<p>The following GitHub workflow
+uploads your package to PyPI
+when you release it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .github/workflows/release.yml</span>
+<span style="color:#66d9ef">name</span>: Release
+<span style="color:#66d9ef">on</span>:
+  <span style="color:#66d9ef">release</span>:
+    <span style="color:#66d9ef">types</span>: [published]
+<span style="color:#66d9ef">jobs</span>:
+  <span style="color:#66d9ef">release</span>:
+    <span style="color:#66d9ef">runs-on</span>: ubuntu-latest
+    <span style="color:#66d9ef">steps</span>:
+    - <span style="color:#66d9ef">uses</span>: actions/checkout@v2
+    - <span style="color:#66d9ef">uses</span>: actions/setup-python@v1
+      <span style="color:#66d9ef">with</span>:
+        <span style="color:#66d9ef">python-version</span>: <span style="color:#e6db74">&#39;3.8&#39;</span>
+        <span style="color:#66d9ef">architecture</span>: x64
+    - <span style="color:#66d9ef">run</span>: pip install nox==<span style="color:#ae81ff">2019.11</span><span style="color:#ae81ff">.9</span>
+    - <span style="color:#66d9ef">run</span>: pip install poetry==<span style="color:#ae81ff">1.0</span><span style="color:#ae81ff">.5</span>
+    - <span style="color:#66d9ef">run</span>: nox
+    - <span style="color:#66d9ef">run</span>: poetry build
+    - <span style="color:#66d9ef">run</span>: poetry publish --username=__token__ --password=${{ secrets.PYPI_TOKEN }}
+</code></pre></div><p>The release workflow is triggered
+when you publish a
+<a href="https://help.github.com/en/github/administering-a-repository/about-releases">GitHub Release</a>.
+GitHub Releases are based on
+<a href="https://git-scm.com/book/en/v2/Git-Basics-Tagging">Git tags</a>,
+which mark a specific point in your repository&rsquo;s history.
+Here&rsquo;s how you can create and publish a release for your project:</p>
+<ol>
+<li>Go to the Releases tab of your main repository page.</li>
+<li>Click <strong>Draft a new release</strong>.</li>
+<li>Enter the Git tag. By convention, these tags have the form <code>v&lt;version&gt;</code>.</li>
+<li>Enter the title and description for your release.</li>
+<li>Click <strong>Publish release</strong>.</li>
+</ol>
+<p>The release workflow should now start building your package,
+and upload the resulting artifacts to PyPI.
+At the start of the workflow,
+the test suite is run once more to
+ensure that the package passes all checks.</p>
+<p>Add a badge to <code>README.md</code> which links to your PyPI project page and displays
+the latest release:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">[<span style="color:#f92672">![PyPI</span>](<span style="color:#a6e22e">https://img.shields.io/pypi/v/hypermodern-python.svg</span>)](https://pypi.org/project/hypermodern-python/)
+</code></pre></div><p>The badge looks like this:</p>
+<figure class="centered"><a href="https://pypi.org/project/hypermodern-python/">
+    <img src="https://img.shields.io/pypi/v/hypermodern-python.svg"/> </a>
+</figure>
+
+<h2 id="documenting-releases-with-release-drafter">Documenting releases with Release Drafter</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa05.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa05.jpg"/> </a>
+</figure>
+
+<p>The <a href="https://github.com/release-drafter/release-drafter">Release Drafter</a> action
+drafts your next release notes
+as pull requests are merged into master.
+It does this by creating and maintaining a draft release.
+When a pull request gets accepted,
+the release description is updated to
+include its title, author, and a link to the pull request itself.</p>
+<p>When you&rsquo;re ready to make a release,
+you simply need to add the tag name, and click <em>Publish</em>.
+You&rsquo;re also free to edit the release description further,
+for example to include a more general description of the release.</p>
+<p>Add the following workflow to use Release Drafter:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .github/workflows/release-drafter.yml</span>
+<span style="color:#66d9ef">name</span>: Release Drafter
+<span style="color:#66d9ef">on</span>:
+  <span style="color:#66d9ef">push</span>:
+    <span style="color:#66d9ef">branches</span>:
+      - master
+<span style="color:#66d9ef">jobs</span>:
+  <span style="color:#66d9ef">draft_release</span>:
+    <span style="color:#66d9ef">runs-on</span>: ubuntu-latest
+    <span style="color:#66d9ef">steps</span>:
+      - <span style="color:#66d9ef">uses</span>: release-drafter/release-drafter@v5<span style="color:#ae81ff">.6</span><span style="color:#ae81ff">.1</span>
+        <span style="color:#66d9ef">env</span>:
+          <span style="color:#66d9ef">GITHUB_TOKEN</span>: ${{ secrets.GITHUB_TOKEN }}
+</code></pre></div><p>Another useful feature of Release Drafter is
+to group pull requests based on labels you apply to them.
+This would allow you, for example,
+to have separate headings for features, bugfixes, and documentation
+in the release notes,
+using GitHub&rsquo;s <em>enhancement</em>, <em>bug</em>, and <em>documentation</em> labels.</p>
+<p>The configuration file below goes somewhat further,
+and is very loosely based on the
+<a href="https://github.com/angular/angular/blob/master/CONTRIBUTING.md#commit">Angular Commit Message Convention</a> and
+<a href="https://gitmoji.carloscuesta.me/">gitmoji</a>.
+You will need to add the remaining labels to your repository manually,
+using <em>New Label</em> on the Issues tab of the repository.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .github/release-drafter.yml</span>
+<span style="color:#66d9ef">categories</span>:
+  - <span style="color:#66d9ef">title: &#39;:boom</span>: Breaking Changes<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>breaking<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:package</span>: Build System<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>build<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:construction_worker</span>: Continuous Integration<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>ci<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:books</span>: Documentation<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>documentation<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:rocket</span>: Features<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>enhancement<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:beetle</span>: Fixes<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>bug<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:racehorse</span>: Performance<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>performance<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:hammer</span>: Refactoring<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>refactoring<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:fire</span>: Removals and Deprecations<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>removal<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:lipstick</span>: Style<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>style<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">  - title: &#39;</span><span style="color:#66d9ef">:rotating_light</span>: Testing<span style="color:#e6db74">&#39;
+</span><span style="color:#e6db74">    label: &#39;</span>testing&#39;
+<span style="color:#66d9ef">template</span>: <span style="color:#e6db74">|
+</span><span style="color:#e6db74"> </span><span style="color:#e6db74"> </span><span style="color:#e6db74">## What’s Changed</span>
+
+  $CHANGES
+</code></pre></div><h2 id="single-sourcing-the-package-version">Single-sourcing the package version</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa06.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa06.jpg"/> </a>
+</figure>
+
+<p>Before creating the next release of your package,
+you need to bump the version of your package.
+Use <a href="https://python-poetry.org/docs/cli/#version">poetry version</a>
+to update the version declared in <code>pyproject.toml</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry version &lt;version&gt;
+</code></pre></div><p>You can pass the new version explicitly,
+or a rule such as <code>major</code>, <code>minor</code>, or <code>patch</code>.
+In a nutshell, increment the major version
+if the release contains breaking changes,
+the patch level if the release contains only bugfixes,
+and the minor version in all other cases.
+This assumes that your project has a stable and public API,
+and a version number greater than or equal to <code>1.0.0</code>.
+For more details,
+refer to the <a href="https://semver.org/">Semantic Versioning</a> standard.</p>
+<p>As it stands, you also need to
+update the version declared inside your package&rsquo;s <code>__init__.py</code>.
+We can streamline this process even further,
+by determining the version automatically
+using the installed package metadata.
+This is possible in Python 3.8 using the standard
+<a href="https://docs.python.org/3/library/importlib.metadata.html">importlib.metadata</a>
+library,
+and in Python 3.7 and earlier using its backport
+<a href="https://importlib-metadata.readthedocs.io/en/latest/">importlib_metadata</a>.</p>
+<p>Add the backport to your dependencies,
+for older Python versions only:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --python<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;&lt;3.8&#34;</span> importlib_metadata
+</code></pre></div><p>Determining the package version should really
+be as simple as the following:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/__init__.py</span>
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">The hypermodern Python project.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+<span style="color:#f92672">from</span> importlib.metadata <span style="color:#f92672">import</span> version
+
+
+__version__ <span style="color:#f92672">=</span> version(__name__)
+</code></pre></div><p>However, the actual implementation is slightly more complicated,
+due to the fact
+that the import path depends on the Python version,
+and the possibility that the package has not been installed
+(although this should rarely happen,
+<a href="https://blog.ionelmc.ro/2014/05/25/python-packaging/">thanks to src layout</a>).
+For the same reasons, we need to disable
+type checking and coverage for certain lines.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/__init__.py</span>
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">The hypermodern Python project.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+<span style="color:#66d9ef">try</span>:
+    <span style="color:#f92672">from</span> importlib.metadata <span style="color:#f92672">import</span> version, PackageNotFoundError  <span style="color:#75715e"># type: ignore</span>
+<span style="color:#66d9ef">except</span> <span style="color:#a6e22e">ImportError</span>:  <span style="color:#75715e"># pragma: no cover</span>
+    <span style="color:#f92672">from</span> importlib_metadata <span style="color:#f92672">import</span> version, PackageNotFoundError  <span style="color:#75715e"># type: ignore</span>
+
+
+<span style="color:#66d9ef">try</span>:
+    __version__ <span style="color:#f92672">=</span> version(__name__)
+<span style="color:#66d9ef">except</span> PackageNotFoundError:  <span style="color:#75715e"># pragma: no cover</span>
+    __version__ <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">unknown</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>With this in place,
+<code>pyproject.toml</code> has become
+the single source of truth for your package version.</p>
+<h2 id="uploading-your-package-to-testpypi">Uploading your package to TestPyPI</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa07.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa07.jpg"/> </a>
+</figure>
+
+<p><a href="https://test.pypi.org">TestPyPI</a>
+is a separate instance of the Python Package Index
+that allows you to try distribution tools and processes
+without affecting the real index.</p>
+<p>Sign up at TestPyPI, and
+grant GitHub Actions permission to upload to TestPyPI:</p>
+<ol>
+<li>Go to the Account Settings on TestPyPI,
+generate an API token,
+and copy it.</li>
+<li>Go to the repository settings on GitHub,
+and add a secret named <code>TEST_PYPI_TOKEN</code>
+with the token you just copied.</li>
+</ol>
+<p>The following GitHub workflow
+builds and uploads your package to TestPyPI
+from the master branch of your repository:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .github/workflows/test-pypi.yml</span>
+<span style="color:#66d9ef">name</span>: TestPyPI
+<span style="color:#66d9ef">on</span>:
+  <span style="color:#66d9ef">push</span>:
+    <span style="color:#66d9ef">branches</span>:
+      - master
+<span style="color:#66d9ef">jobs</span>:
+  <span style="color:#66d9ef">test_pypi</span>:
+    <span style="color:#66d9ef">runs-on</span>: ubuntu-latest
+    <span style="color:#66d9ef">steps</span>:
+    - <span style="color:#66d9ef">uses</span>: actions/checkout@v2
+    - <span style="color:#66d9ef">uses</span>: actions/setup-python@v1
+      <span style="color:#66d9ef">with</span>:
+        <span style="color:#66d9ef">python-version</span>: <span style="color:#e6db74">&#39;3.8&#39;</span>
+        <span style="color:#66d9ef">architecture</span>: x64
+    - <span style="color:#66d9ef">run</span>: pip install poetry==<span style="color:#ae81ff">1.0</span><span style="color:#ae81ff">.5</span>
+    - <span style="color:#66d9ef">run</span>: &gt;<span style="color:#e6db74">-
+</span><span style="color:#e6db74">       </span><span style="color:#e6db74"> </span><span style="color:#e6db74">poetry version patch &amp;&amp;</span>
+        version=$(poetry version | awk <span style="color:#e6db74">&#39;{print $2}&#39;</span>) <span style="color:#75715e">&amp;&amp;</span>
+        poetry version $version.dev.$(date +%s)
+    - <span style="color:#66d9ef">run</span>: poetry build
+    - <span style="color:#66d9ef">uses</span>: pypa/gh-action-pypi-publish@v1<span style="color:#ae81ff">.0</span>.0a0
+      <span style="color:#66d9ef">with</span>:
+        <span style="color:#66d9ef">user</span>: __token__
+        <span style="color:#66d9ef">password</span>: ${{ secrets.TEST_PYPI_TOKEN }}
+        <span style="color:#66d9ef">repository_url</span>: https://test.pypi.org/legacy/
+</code></pre></div><p>TestPyPI does not allow you to overwrite an existing package version.
+The workflow therefore bumps the version and
+appends a suffix of the form <code>.dev.&lt;timestamp&gt;</code>,
+indicating a
+<a href="https://www.python.org/dev/peps/pep-0440/#developmental-releases">developmental release</a>.
+The package is then built
+and uploaded using the
+<a href="https://github.com/marketplace/actions/pypi-publish">PyPI publish GitHub Action</a>
+of the <a href="https://www.pypa.io/">Python Packaging Authority</a>.</p>
+<h2 id="hosting-documentation-at-read-the-docs">Hosting documentation at Read the Docs</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa08.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa08.jpg"/> </a>
+</figure>
+
+<p><a href="https://readthedocs.org/">Read the Docs</a> hosts documentation for countless
+open-source Python projects. The hosting service also takes care of rebuilding
+the documentation when you update your project. Users can browse documentation
+for every published version, as well as the latest development version.</p>
+<p>Create the <code>.readthedocs.yml</code> configuration file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .readthedocs.yml</span>
+<span style="color:#66d9ef">version</span>: <span style="color:#ae81ff">2</span>
+<span style="color:#66d9ef">sphinx</span>:
+  <span style="color:#66d9ef">configuration</span>: docs/conf.py
+<span style="color:#66d9ef">formats</span>: all
+<span style="color:#66d9ef">python</span>:
+  <span style="color:#66d9ef">version</span>: <span style="color:#ae81ff">3.7</span>
+  <span style="color:#66d9ef">install</span>:
+    - <span style="color:#66d9ef">requirements</span>: docs/requirements.txt
+    - <span style="color:#66d9ef">path</span>: .
+</code></pre></div><p>The <code>install</code> section in the configuration file tells Read the Docs how to
+install your package and its documentation dependencies. Read the Docs does not
+support installation of dependencies using Poetry directly. Luckily, pip can
+install any package with a standard <code>pyproject.toml</code> file, and will use Poetry
+behind the scenes.</p>
+<p>On the other hand,
+the development dependencies on Sphinx and its extensions
+are not declared in the package.
+(And even if they were,
+dependencies declared in the package are not pinned,
+so we might run into problems due to
+slightly different build environments.)
+Uploading the documentation from a GitHub workflow would solve this nicely,
+but this is <a href="https://github.com/readthedocs/readthedocs.org/issues/1083">currently not supported</a>.
+So let&rsquo;s be pragmatic and
+duplicate the documentation dependencies
+using a separate requirements file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># docs/requirements.txt</span>
+sphinx<span style="color:#f92672">==</span><span style="color:#ae81ff">2.3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>
+sphinx<span style="color:#f92672">-</span>autodoc<span style="color:#f92672">-</span>typehints<span style="color:#f92672">==</span><span style="color:#ae81ff">1.10</span><span style="color:#f92672">.</span><span style="color:#ae81ff">3</span>
+</code></pre></div><p>Sign up at Read the Docs, and import your GitHub repository, using the button
+<em>Import a Project</em>. Read the Docs automatically starts building your
+documentation. When the build has completed, your documentation will have a
+public URL like this:</p>
+<blockquote>
+<p><a href="https://hypermodern-python.readthedocs.io/">https://hypermodern-python.readthedocs.io/</a></p>
+</blockquote>
+<p>You can display the documentation link on PyPI by including it in your package
+configuration file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#75715e"># pyproject.toml</span>
+[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">poetry</span>]
+<span style="color:#a6e22e">documentation</span> = <span style="color:#e6db74">&#34;https://hypermodern-python.readthedocs.io&#34;</span>
+</code></pre></div><p>Let&rsquo;s also add the link to the GitHub repository page, by adding a Read the Docs
+badge to <code>README.md</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">[<span style="color:#f92672">![Read the Docs</span>](<span style="color:#a6e22e">https://readthedocs.org/projects/hypermodern-python/badge/</span>)](https://hypermodern-python.readthedocs.io/)
+</code></pre></div><p>The badge looks like this:</p>
+<figure class="centered"><a href="https://hypermodern-python.readthedocs.io/">
+    <img src="https://readthedocs.org/projects/hypermodern-python/badge/"/> </a>
+</figure>
+
+<h2 id="conclusion">Conclusion</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa09.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa09.jpg"/> </a>
+</figure>
+
+<p>Thank you for reading this far. This chapter concludes the Hypermodern Python
+series.</p>
+<p>I would like to acknowledge these wonderful people
+for providing their feedback to early drafts:
+<a href="https://github.com/agronholm">Alex Grönholm</a>,
+<a href="https://github.com/nicoddemus">Bruno Oliveira</a>,
+<a href="https://github.com/hpk42">Holger Krekel</a>,
+<a href="http://hynek.me/">Hynek Schlawack</a>,
+<a href="https://ian.stapletoncordas.co/">Ian Stapleton Cordasco</a>,
+Oliver Gondring,
+<a href="https://pgjones.dev/">Phil Jones</a>,
+<a href="https://github.com/Iracinder">Pierre-Jean Vincent</a>,
+<a href="https://github.com/RonnyPfannschmidt">Ronny Pfannschmidt</a>,
+<a href="https://github.com/terrencepreilly">Terrence Reilly</a>,
+<a href="https://thea.codes/">Thea Flowers</a>.
+Mistakes are mine.</p>
+<p>The idea to use
+<a href="https://www.reddit.com/r/RetroFuturism/">retrofuturist</a>
+imagery as a visual theme for this blog
+came from Marianna Jolowicz.</p>
+<p>This series of articles is dedicated to my father
+who introduced me to programming in the 1980s,
+and who is an avid chess book collector.
+His copy of <em>Die hypermoderne Schachpartie</em> (The hypermodern chess game) &ndash;
+written by <a href="https://en.wikipedia.org/wiki/Savielly_Tartakower">Savielly Tartakower</a> in 1925
+to describe recent advances in chess theory &ndash;
+inspired the title of this guide.</p>
+<figure class="centered">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/boat.jpg"/> 
+</figure>
+
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>The images in this chapter are
+artistic renderings of space colonies from the 1970s,
+made during a series of space colony summer studies
+held by the Princeton physicist Gerard O&rsquo;Neill,
+with the help of NASA Ames Research Center and Stanford University
+(source:
+<a href="https://settlement.arc.nasa.gov/70sArt/art.html">NASA Ames Research Center</a>
+via
+<a href="https://publicdomainreview.org/collection/space-colony-art-from-the-1970s">The Public Domain Review</a>). <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-141256188-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

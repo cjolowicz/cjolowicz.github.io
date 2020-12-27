@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Claudio Jolowicz</title>
+    <link>https://cjolowicz.github.io/tags/</link>
+    <description>Recent content in Tags on Claudio Jolowicz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 05 Feb 2020 17:41:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://cjolowicz.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Codecov</title>
+      <link>https://cjolowicz.github.io/tags/codecov/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/codecov/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GitHub Actions</title>
+      <link>https://cjolowicz.github.io/tags/github-actions/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/github-actions/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>nox</title>
+      <link>https://cjolowicz.github.io/tags/nox/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/nox/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>poetry</title>
+      <link>https://cjolowicz.github.io/tags/poetry/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/poetry/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>PyPI</title>
+      <link>https://cjolowicz.github.io/tags/pypi/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/pypi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>python</title>
+      <link>https://cjolowicz.github.io/tags/python/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/python/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Read the Docs</title>
+      <link>https://cjolowicz.github.io/tags/read-the-docs/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/read-the-docs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>TestPyPI</title>
+      <link>https://cjolowicz.github.io/tags/testpypi/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/testpypi/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>darglint</title>
+      <link>https://cjolowicz.github.io/tags/darglint/</link>
+      <pubDate>Wed, 29 Jan 2020 12:49:59 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/darglint/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>flake8</title>
+      <link>https://cjolowicz.github.io/tags/flake8/</link>
+      <pubDate>Wed, 29 Jan 2020 12:49:59 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/flake8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sphinx</title>
+      <link>https://cjolowicz.github.io/tags/sphinx/</link>
+      <pubDate>Wed, 29 Jan 2020 12:49:59 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/sphinx/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>xdoctest</title>
+      <link>https://cjolowicz.github.io/tags/xdoctest/</link>
+      <pubDate>Wed, 29 Jan 2020 12:49:59 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/xdoctest/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>mypy</title>
+      <link>https://cjolowicz.github.io/tags/mypy/</link>
+      <pubDate>Wed, 22 Jan 2020 10:04:00 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/mypy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pytype</title>
+      <link>https://cjolowicz.github.io/tags/pytype/</link>
+      <pubDate>Wed, 22 Jan 2020 10:04:00 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/pytype/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>bandit</title>
+      <link>https://cjolowicz.github.io/tags/bandit/</link>
+      <pubDate>Wed, 15 Jan 2020 07:04:32 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/bandit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>black</title>
+      <link>https://cjolowicz.github.io/tags/black/</link>
+      <pubDate>Wed, 15 Jan 2020 07:04:32 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/black/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pre-commit</title>
+      <link>https://cjolowicz.github.io/tags/pre-commit/</link>
+      <pubDate>Wed, 15 Jan 2020 07:04:32 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/pre-commit/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>safety</title>
+      <link>https://cjolowicz.github.io/tags/safety/</link>
+      <pubDate>Wed, 15 Jan 2020 07:04:32 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/safety/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>coverage.py</title>
+      <link>https://cjolowicz.github.io/tags/coverage.py/</link>
+      <pubDate>Wed, 08 Jan 2020 06:28:21 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/coverage.py/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pytest</title>
+      <link>https://cjolowicz.github.io/tags/pytest/</link>
+      <pubDate>Wed, 08 Jan 2020 06:28:21 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/pytest/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pytest-mock</title>
+      <link>https://cjolowicz.github.io/tags/pytest-mock/</link>
+      <pubDate>Wed, 08 Jan 2020 06:28:21 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/pytest-mock/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>click</title>
+      <link>https://cjolowicz.github.io/tags/click/</link>
+      <pubDate>Wed, 01 Jan 2020 08:00:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/click/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>pyenv</title>
+      <link>https://cjolowicz.github.io/tags/pyenv/</link>
+      <pubDate>Wed, 01 Jan 2020 08:00:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/pyenv/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>requests</title>
+      <link>https://cjolowicz.github.io/tags/requests/</link>
+      <pubDate>Wed, 01 Jan 2020 08:00:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/requests/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cmake</title>
+      <link>https://cjolowicz.github.io/tags/cmake/</link>
+      <pubDate>Thu, 23 May 2019 09:08:59 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/cmake/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>https://cjolowicz.github.io/tags/docker/</link>
+      <pubDate>Thu, 23 May 2019 09:08:59 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>github-pages</title>
+      <link>https://cjolowicz.github.io/tags/github-pages/</link>
+      <pubDate>Sat, 27 Apr 2019 10:48:29 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/github-pages/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>hugo</title>
+      <link>https://cjolowicz.github.io/tags/hugo/</link>
+      <pubDate>Sat, 27 Apr 2019 10:48:29 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/hugo/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>travis</title>
+      <link>https://cjolowicz.github.io/tags/travis/</link>
+      <pubDate>Sat, 27 Apr 2019 10:48:29 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/tags/travis/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

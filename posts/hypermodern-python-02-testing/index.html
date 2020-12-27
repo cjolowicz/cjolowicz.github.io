@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Claudio Jolowicz">
+    <meta name="description" content="Claudio Jolowicz&#39;s website">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hypermodern Python Chapter 2: Testing"/>
+<meta name="twitter:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism."/>
+
+    <meta property="og:title" content="Hypermodern Python Chapter 2: Testing" />
+<meta property="og:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cjolowicz.github.io/posts/hypermodern-python-02-testing/" />
+<meta property="article:published_time" content="2020-01-08T06:28:21+01:00" />
+<meta property="article:modified_time" content="2020-01-08T06:28:21+01:00" />
+
+
+    
+      <base href="https://cjolowicz.github.io/posts/hypermodern-python-02-testing/">
+    
+    <title>
+  Hypermodern Python Chapter 2: Testing · Claudio Jolowicz
+</title>
+
+    
+      <link rel="canonical" href="https://cjolowicz.github.io/posts/hypermodern-python-02-testing/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://cjolowicz.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://cjolowicz.github.io/">
+      Claudio Jolowicz
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://cjolowicz.github.io/posts/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="http://claudiojolowicz.com/">Music</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Hypermodern Python Chapter 2: Testing</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-01-08T06:28:21&#43;01:00'>
+                January 8, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              16 minutes read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://cjolowicz.github.io/tags/python/">python</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/poetry/">poetry</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/nox/">nox</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/pytest/">pytest</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/coverage.py/">coverage.py</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/pytest-mock/">pytest-mock</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <p><a href="https://medium.com/@cjolowicz/hypermodern-python-2-testing-ae907a920260">Read this article on Medium</a></p>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne01.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne01.jpg"/> </a>
+</figure>
+
+<p>In this second installment of the Hypermodern Python series, I&rsquo;m going to
+discuss how to add automated testing to your project, and how to teach the
+random fact generator foreign languages.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup> Previously, we discussed <a href="../hypermodern-python-01-setup">How to
+set up a Python project</a>. (If you start reading
+here, you can also
+<a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter01.zip">download</a>
+the code for the previous chapter.)</p>
+<p>Here are the topics covered in this chapter on Testing in Python:</p>
+<ul>
+<li><a href="#unit-testing-with-pytest">Unit testing with pytest</a></li>
+<li><a href="#code-coverage-with-coveragepy">Code coverage with Coverage.py</a></li>
+<li><a href="#test-automation-with-nox">Test automation with Nox</a></li>
+<li><a href="#mocking-with-pytest-mock">Mocking with pytest-mock</a></li>
+<li><a href="#example-cli-refactoring">Example CLI: Refactoring</a></li>
+<li><a href="#example-cli-handling-exceptions-gracefully">Example CLI: Handling exceptions gracefully</a></li>
+<li><a href="#example-cli-selecting-the-wikipedia-language-edition">Example CLI: Selecting the Wikipedia language edition</a></li>
+<li><a href="#using-fakes">Using fakes</a></li>
+<li><a href="#endtoend-testing">End-to-end testing</a></li>
+</ul>
+<p>Here is a full list of the articles in this series:</p>
+<ul>
+<li><a href="../hypermodern-python-01-setup">Chapter 1: Setup</a></li>
+<li><a href="../hypermodern-python-02-testing">Chapter 2: Testing</a> (this article)</li>
+<li><a href="../hypermodern-python-03-linting">Chapter 3: Linting</a></li>
+<li><a href="../hypermodern-python-04-typing">Chapter 4: Typing</a></li>
+<li><a href="../hypermodern-python-05-documentation">Chapter 5: Documentation</a></li>
+<li><a href="../hypermodern-python-06-ci-cd">Chapter 6: CI/CD</a></li>
+</ul>
+<p>This guide has a companion repository:
+<a href="https://github.com/cjolowicz/hypermodern-python">cjolowicz/hypermodern-python</a>.
+Each article in the guide corresponds to a set of commits in the GitHub
+repository:</p>
+<ul>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/compare/chapter01...chapter02">View changes</a></li>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter02.zip">Download code</a></li>
+</ul>
+<h2 id="unit-testing-with-pytest">Unit testing with pytest</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne02.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne02.jpg"/> </a>
+</figure>
+
+<p>It&rsquo;s never too early to add unit tests to a project.</p>
+<p>Unit tests, as the name says, verify the functionality of a <em>unit of code</em>, such
+as a single function or class. While the
+<a href="https://docs.python.org/3/library/unittest.html">unittest</a> framework is part of
+the Python standard library, <a href="https://docs.pytest.org/en/latest/">pytest</a> has
+become somewhat of a <em>de facto</em> standard.</p>
+<p>Let&rsquo;s add this package as a development dependency, using Poetry&rsquo;s <code>--dev</code>
+option:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev pytest
+</code></pre></div><p>Organize tests in a <a href="http://doc.pytest.org/en/latest/goodpractices.html#tests-outside-application-code">separate file
+hierarchy</a>
+next to <code>src</code>, named <code>tests</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">.
+├── src
+└── tests
+    ├── __init__.py
+    └── test_console.py
+
+<span style="color:#ae81ff">2</span> directories, <span style="color:#ae81ff">2</span> files
+</code></pre></div><p>The file <code>__init__.py</code> is empty and serves to declare the test suite as a
+package. While this is not strictly necessary, it allows your test suite to
+mirror the source layout of the package under test, even when modules in
+different parts of the source tree <a href="https://github.com/pytest-dev/pytest/issues/3151">have the same
+name</a>. Furthermore, it gives
+you the option to import modules from within your tests package.</p>
+<p>The file <code>test_console.py</code> contains a test case for the <code>console</code> module, which
+checks whether the program exits with a status code of zero.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#f92672">import</span> click.testing
+
+<span style="color:#f92672">from</span> hypermodern_python <span style="color:#f92672">import</span> console
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_succeeds</span>():
+    runner <span style="color:#f92672">=</span> click<span style="color:#f92672">.</span>testing<span style="color:#f92672">.</span>CliRunner()
+    result <span style="color:#f92672">=</span> runner<span style="color:#f92672">.</span>invoke(console<span style="color:#f92672">.</span>main)
+    <span style="color:#66d9ef">assert</span> result<span style="color:#f92672">.</span>exit_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+</code></pre></div><p>Click&rsquo;s <code>testing.CliRunner</code> can invoke the command-line interface from within a
+test case. Since this is likely to be needed by most test cases in this module,
+let&rsquo;s turn it into a <a href="https://docs.pytest.org/en/latest/fixture.html">test
+fixture</a>. <em>Test fixtures</em> are
+simple functions declared with the <code>pytest.fixture</code> decorator. Test cases can
+use a test fixture by including a function parameter with the same name as the
+test fixture.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#f92672">import</span> click.testing
+<span style="color:#f92672">import</span> pytest
+
+<span style="color:#f92672">from</span> hypermodern_python <span style="color:#f92672">import</span> console
+
+
+<span style="color:#a6e22e">@pytest.fixture</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">runner</span>():
+    <span style="color:#66d9ef">return</span> click<span style="color:#f92672">.</span>testing<span style="color:#f92672">.</span>CliRunner()
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_succeeds</span>(runner):
+    result <span style="color:#f92672">=</span> runner<span style="color:#f92672">.</span>invoke(console<span style="color:#f92672">.</span>main)
+    <span style="color:#66d9ef">assert</span> result<span style="color:#f92672">.</span>exit_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+</code></pre></div><p>Invoke <code>pytest</code> to run the test suite:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#960050;background-color:#1e0010">$</span> poetry run pytest
+<span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span> test session starts <span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">=</span>
+platform linux <span style="color:#f92672">-</span><span style="color:#f92672">-</span> Python <span style="color:#ae81ff">3.8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2</span>, pytest<span style="color:#f92672">-</span><span style="color:#ae81ff">5.3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4</span>, py<span style="color:#f92672">-</span><span style="color:#ae81ff">1.8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>, pluggy<span style="color:#f92672">-</span><span style="color:#ae81ff">0.13</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>
+rootdir: <span style="color:#f92672">/</span>hypermodern<span style="color:#f92672">-</span>python
+collected <span style="color:#ae81ff">1</span> item
+
+tests<span style="color:#f92672">/</span>test_console<span style="color:#f92672">.</span>py <span style="color:#f92672">.</span>                                                 [<span style="color:#ae81ff">100</span><span style="color:#f92672">%</span>]
+
+<span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span> passed <span style="color:#f92672">in</span> <span style="color:#ae81ff">0.03</span>s <span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span>
+</code></pre></div><h2 id="code-coverage-with-coveragepy">Code coverage with Coverage.py</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne03.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne03.jpg"/> </a>
+</figure>
+
+<p><em>Code coverage</em> is a measure of the degree to which the source code of your
+program is executed while running its test suite. The code coverage of Python
+programs can be determined using a tool called
+<a href="https://coverage.readthedocs.io/">Coverage.py</a>. Install it with the
+<a href="https://pytest-cov.readthedocs.io/en/latest/">pytest-cov</a> plugin, which
+integrates Coverage.py with <code>pytest</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev coverage<span style="color:#f92672">[</span>toml<span style="color:#f92672">]</span> pytest-cov
+</code></pre></div><p>You can configure Coverage.py using the <code>pyproject.toml</code> configuration file,
+provided it was installed with the <code>toml</code> extra as shown above. Update this file
+to inform the tool about your package name and source tree layout. The
+configuration also enables branch analysis and the display of line numbers for
+missing coverage:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#75715e"># pyproject.toml</span>
+[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">coverage</span>.<span style="color:#a6e22e">paths</span>]
+<span style="color:#a6e22e">source</span> = [<span style="color:#e6db74">&#34;src&#34;</span>, <span style="color:#e6db74">&#34;*/site-packages&#34;</span>]
+
+[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">coverage</span>.<span style="color:#a6e22e">run</span>]
+<span style="color:#a6e22e">branch</span> = <span style="color:#66d9ef">true</span>
+<span style="color:#a6e22e">source</span> = [<span style="color:#e6db74">&#34;hypermodern_python&#34;</span>]
+
+[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">coverage</span>.<span style="color:#a6e22e">report</span>]
+<span style="color:#a6e22e">show_missing</span> = <span style="color:#66d9ef">true</span>
+</code></pre></div><p>To enable coverage reporting, invoke <code>pytest</code> with the <code>--cov</code> option:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#960050;background-color:#1e0010">$</span> poetry run pytest <span style="color:#f92672">-</span><span style="color:#f92672">-</span>cov
+<span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">=</span> test session starts <span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span>
+platform linux <span style="color:#f92672">-</span><span style="color:#f92672">-</span> Python <span style="color:#ae81ff">3.8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2</span>, pytest<span style="color:#f92672">-</span><span style="color:#ae81ff">5.3</span><span style="color:#f92672">.</span><span style="color:#ae81ff">4</span>, py<span style="color:#f92672">-</span><span style="color:#ae81ff">1.8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>, pluggy<span style="color:#f92672">-</span><span style="color:#ae81ff">0.13</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>
+rootdir: <span style="color:#f92672">/</span>hypermodern<span style="color:#f92672">-</span>python
+plugins: cov<span style="color:#f92672">-</span><span style="color:#ae81ff">2.8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">1</span>
+collected <span style="color:#ae81ff">1</span> item
+
+tests<span style="color:#f92672">/</span>test_console<span style="color:#f92672">.</span>py <span style="color:#f92672">.</span>                                                 [<span style="color:#ae81ff">100</span><span style="color:#f92672">%</span>]
+
+<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span> coverage: platform linux, python <span style="color:#ae81ff">3.8</span><span style="color:#f92672">.</span><span style="color:#ae81ff">2</span><span style="color:#f92672">-</span>final<span style="color:#f92672">-</span><span style="color:#ae81ff">0</span> <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span>
+Name                                 Stmts   Miss Branch BrPart  Cover   Missing
+<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span>
+src<span style="color:#f92672">/</span>hypermodern_python<span style="color:#f92672">/</span>__init__<span style="color:#f92672">.</span>py       <span style="color:#ae81ff">1</span>      <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">100</span><span style="color:#f92672">%</span>
+src<span style="color:#f92672">/</span>hypermodern_python<span style="color:#f92672">/</span>console<span style="color:#f92672">.</span>py        <span style="color:#ae81ff">6</span>      <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">100</span><span style="color:#f92672">%</span>
+<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span>
+TOTAL                                    <span style="color:#ae81ff">7</span>      <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>      <span style="color:#ae81ff">0</span>   <span style="color:#ae81ff">100</span><span style="color:#f92672">%</span>
+<span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span> passed <span style="color:#f92672">in</span> <span style="color:#ae81ff">0.09</span>s <span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">==</span><span style="color:#f92672">=</span>
+</code></pre></div><p>The reported code coverage is 100%. This number does not imply that your test
+suite has meaningful test cases for all uses and misuses of your program. Code
+coverage only tells you that all lines and branches in your code base were hit.
+(In fact, our test case achieved full coverage without checking the
+functionality of the program at all, only its exit status.)</p>
+<p>Nevertheless, aiming for 100% code coverage is good practice, especially for a
+fresh codebase. Anything less than that implies that some part of your code base
+is definitely untested. And to quote <a href="https://en.wikipedia.org/wiki/Bruce_Eckel">Bruce
+Eckel</a>, &ldquo;If it&rsquo;s not tested, it&rsquo;s
+broken.&rdquo; Later, we will see some tools that help you achieve extensive code
+coverage.</p>
+<p>You can configure Coverage.py to require full test coverage (or any other target
+percentage) using the
+<a href="https://coverage.readthedocs.io/en/stable/config.html#report">fail_under</a>
+option:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-toml" data-lang="toml"><span style="color:#75715e"># pyproject.toml</span>
+[<span style="color:#a6e22e">tool</span>.<span style="color:#a6e22e">coverage</span>.<span style="color:#a6e22e">report</span>]
+<span style="color:#a6e22e">fail_under</span> = <span style="color:#ae81ff">100</span>
+</code></pre></div><h2 id="test-automation-with-nox">Test automation with Nox</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne04.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne04.jpg"/> </a>
+</figure>
+
+<p>One of my personal favorites, <a href="https://nox.thea.codes/">Nox</a> is a successor to
+the venerable <a href="https://tox.readthedocs.io/">tox</a>. At its core, the tool
+automates testing in multiple Python environments. Nox makes it easy to run any
+kind of job in an isolated environment, with only those dependencies installed
+that the job needs.</p>
+<p>Install Nox via <a href="https://pip.readthedocs.org/">pip</a> or
+<a href="https://github.com/pipxproject/pipx">pipx</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">pip install --user --upgrade nox
+</code></pre></div><p>Unlike tox, Nox uses a standard Python file for configuration:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#f92672">import</span> nox
+
+
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tests</span>(session):
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">install</span><span style="color:#e6db74">&#34;</span>, external<span style="color:#f92672">=</span>True)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">pytest</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--cov</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>This file defines a session named <code>tests</code>, which installs the project
+dependencies and runs the test suite. Poetry is not a part of the environment
+created by Nox, so we specify <code>external</code> to avoid warnings about external
+commands leaking into the isolated test environments.</p>
+<p>Nox creates virtual environments for the listed Python versions (3.8 and 3.7),
+and runs the session inside each environment:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#960050;background-color:#1e0010">$</span> nox
+
+nox <span style="color:#f92672">&gt;</span> Running session tests<span style="color:#f92672">-</span><span style="color:#ae81ff">3.8</span>
+nox <span style="color:#f92672">&gt;</span> Creating virtual environment (virtualenv) using python3<span style="color:#f92672">.</span><span style="color:#ae81ff">8</span> <span style="color:#f92672">in</span> <span style="color:#f92672">.</span>nox<span style="color:#f92672">/</span>tests<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span><span style="color:#f92672">-</span><span style="color:#ae81ff">8</span>
+nox <span style="color:#f92672">&gt;</span> poetry install
+<span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
+nox <span style="color:#f92672">&gt;</span> pytest <span style="color:#f92672">-</span><span style="color:#f92672">-</span>cov
+<span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
+nox <span style="color:#f92672">&gt;</span> Session tests<span style="color:#f92672">-</span><span style="color:#ae81ff">3.8</span> was successful<span style="color:#f92672">.</span>
+nox <span style="color:#f92672">&gt;</span> Running session tests<span style="color:#f92672">-</span><span style="color:#ae81ff">3.7</span>
+nox <span style="color:#f92672">&gt;</span> Creating virtual environment (virtualenv) using python3<span style="color:#f92672">.</span><span style="color:#ae81ff">7</span> <span style="color:#f92672">in</span> <span style="color:#f92672">.</span>nox<span style="color:#f92672">/</span>tests<span style="color:#f92672">-</span><span style="color:#ae81ff">3</span><span style="color:#f92672">-</span><span style="color:#ae81ff">7</span>
+nox <span style="color:#f92672">&gt;</span> poetry install
+<span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
+nox <span style="color:#f92672">&gt;</span> pytest <span style="color:#f92672">-</span><span style="color:#f92672">-</span>cov
+<span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
+nox <span style="color:#f92672">&gt;</span> Session tests<span style="color:#f92672">-</span><span style="color:#ae81ff">3.7</span> was successful<span style="color:#f92672">.</span>
+nox <span style="color:#f92672">&gt;</span> Ran multiple sessions:
+nox <span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span> tests<span style="color:#f92672">-</span><span style="color:#ae81ff">3.8</span>: success
+nox <span style="color:#f92672">&gt;</span> <span style="color:#f92672">*</span> tests<span style="color:#f92672">-</span><span style="color:#ae81ff">3.7</span>: success
+</code></pre></div><p>Nox recreates the virtual environments from scratch on each invocation (a
+sensible default). You can speed things up by passing the
+<a href="https://nox.thea.codes/en/stable/usage.html#re-using-virtualenvs">--reuse-existing-virtualenvs
+(-r)</a> option:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -r
+</code></pre></div><p>Sometimes, you need to pass additional options to <code>pytest</code>, for example to
+select specific test cases. Change the session to allow overriding the options
+passed to <code>pytest</code>, via the
+<a href="https://nox.thea.codes/en/stable/config.html#passing-arguments-into-sessions">session.posargs</a>
+variable:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#f92672">import</span> nox
+
+
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tests</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> [<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--cov</span><span style="color:#e6db74">&#34;</span>]
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">install</span><span style="color:#e6db74">&#34;</span>, external<span style="color:#f92672">=</span>True)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">pytest</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>Now you can run a specific test module inside the environments:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -- tests/test_console.py
+</code></pre></div><h2 id="mocking-with-pytest-mock">Mocking with pytest-mock</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne05.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne05.jpg"/> </a>
+</figure>
+
+<p>Unit tests should be <a href="http://agileinaflash.blogspot.com/2009/02/first.html">fast, isolated, and
+repeatable</a>. The test for
+<code>console.main</code> is neither of these:</p>
+<ul>
+<li>It is not fast, because it takes a full round-trip to the Wikipedia API to
+complete.</li>
+<li>It does not run in an isolated environment, because it sends out an actual
+request over the network.</li>
+<li>It is not repeatable, because its outcome depends on the health, reachability,
+and behavior of the API. In particular, the test fails whenever the network
+is down.</li>
+</ul>
+<p>The <a href="https://docs.python.org/3/library/unittest.mock.html">unittest.mock</a>
+standard library allows you to replace parts of your system under test with mock
+objects. Use it via the <a href="https://github.com/pytest-dev/pytest-mock">pytest-mock</a>
+plugin, which integrates the library with <code>pytest</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev pytest-mock
+</code></pre></div><p>The plugin provides a <code>mocker</code> fixture, which functions as a thin wrapper around
+the standard mocking library. Use <code>mocker.patch</code> to replace the <code>requests.get</code>
+function by a mock object. The mock object will be useful for any test case
+involving the Wikipedia API, so let&rsquo;s create a test fixture for it:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#a6e22e">@pytest.fixture</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mock_requests_get</span>(mocker):
+    <span style="color:#66d9ef">return</span> mocker<span style="color:#f92672">.</span>patch(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">requests.get</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>Add the fixture to the function parameters of the test case:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_succeeds</span>(runner, mock_requests_get):
+    <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
+</code></pre></div><p>If you run Nox now, the test fails because click expects to be passed a string
+for console output, and receives a mock object instead. Simply &ldquo;knocking out&rdquo;
+<code>requests.get</code> is not quite enough. The mock object also needs to return
+something meaningful, namely a response with a valid JSON object.</p>
+<p>When a mock object is called, or when an attribute is accessed, it returns
+another mock object. Sometimes this is sufficient to get you through a test
+case. When it is not, you need to <em>configure</em> the mock object. To configure an
+attribute, you simply set the attribute to the desired value. To configure the
+return value for when the mock is called, you set <code>return_value</code> on the mock
+object as if it were an attribute.</p>
+<p>Let&rsquo;s look at the example again:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">with</span> requests<span style="color:#f92672">.</span>get(API_URL) <span style="color:#66d9ef">as</span> response:
+    response<span style="color:#f92672">.</span>raise_for_status()
+    data <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span>json()
+</code></pre></div><p>The code above uses the response as a <a href="https://docs.python.org/3/reference/datamodel.html#context-managers">context
+manager</a>.
+The <code>with</code> statement is syntactic sugar for the following slightly simplified
+pseudocode:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">context <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(API_URL)
+response <span style="color:#f92672">=</span> context<span style="color:#f92672">.</span>__enter__()
+
+<span style="color:#66d9ef">try</span>:
+    response<span style="color:#f92672">.</span>raise_for_status()
+    data <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span>json()
+<span style="color:#66d9ef">finally</span>:
+    context<span style="color:#f92672">.</span>__exit__(<span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>)
+</code></pre></div><p>So what you have is essentially a chain of function calls:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">data <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(API_URL)<span style="color:#f92672">.</span>__enter__()<span style="color:#f92672">.</span>json()
+</code></pre></div><p>Rewrite the fixture, and mirror this call chain when you configure the mock:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@pytest.fixture</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mock_requests_get</span>(mocker):
+    mock <span style="color:#f92672">=</span> mocker<span style="color:#f92672">.</span>patch(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">requests.get</span><span style="color:#e6db74">&#34;</span>)
+    mock<span style="color:#f92672">.</span>return_value<span style="color:#f92672">.</span>__enter__<span style="color:#f92672">.</span>return_value<span style="color:#f92672">.</span>json<span style="color:#f92672">.</span>return_value <span style="color:#f92672">=</span> {
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">title</span><span style="color:#e6db74">&#34;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Lorem Ipsum</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">extract</span><span style="color:#e6db74">&#34;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Lorem ipsum dolor sit amet</span><span style="color:#e6db74">&#34;</span>,
+    }
+    <span style="color:#66d9ef">return</span> mock
+</code></pre></div><p>Invoke Nox again to see that the test suite passes. 🎉</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ nox -r
+...
+nox &gt; Ran multiple sessions:
+nox &gt; * tests-3.8: success
+nox &gt; * tests-3.7: success
+</code></pre></div><p>Mocking not only speeds up your test suite, or lets you hack offline on a plane
+or train. By virtue of having a fixed, or deterministic, return value, the mock
+also enables you to write repeatable tests. This means you can, for example,
+check that the title returned by the API is printed to the console:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_prints_title</span>(runner, mock_requests_get):
+    result <span style="color:#f92672">=</span> runner<span style="color:#f92672">.</span>invoke(console<span style="color:#f92672">.</span>main)
+    <span style="color:#66d9ef">assert</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Lorem Ipsum</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">in</span> result<span style="color:#f92672">.</span>output
+</code></pre></div><p>Additionally, mocks can be inspected to see if they were called, using the
+mock&rsquo;s
+<a href="https://docs.python.org/3/library/unittest.mock.html#unittest.mock.Mock.called">called</a>
+attribute. This provides you with a way to check that <code>requests.get</code> was invoked
+to send a request to the API:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_invokes_requests_get</span>(runner, mock_requests_get):
+    runner<span style="color:#f92672">.</span>invoke(console<span style="color:#f92672">.</span>main)
+    <span style="color:#66d9ef">assert</span> mock_requests_get<span style="color:#f92672">.</span>called
+</code></pre></div><p>Mock objects also allow you to inspect the arguments they were called with,
+using the
+<a href="https://docs.python.org/3/library/unittest.mock.html#unittest.mock.Mock.call_args">call_args</a>
+attribute. This allows you to check the URL passed to <code>requests.get</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_uses_en_wikipedia_org</span>(runner, mock_requests_get):
+    runner<span style="color:#f92672">.</span>invoke(console<span style="color:#f92672">.</span>main)
+    args, _ <span style="color:#f92672">=</span> mock_requests_get<span style="color:#f92672">.</span>call_args
+    <span style="color:#66d9ef">assert</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">en.wikipedia.org</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">in</span> args[<span style="color:#ae81ff">0</span>]
+</code></pre></div><p>You can configure a mock to raise an exception instead of returning a value by
+assigning the exception instance or class to the
+<a href="https://docs.python.org/3/library/unittest.mock.html#unittest.mock.Mock.side_effect">side_effect</a>
+attribute of the mock. Let&rsquo;s check that the program exits with a status code of
+1 on request errors:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_fails_on_request_error</span>(runner, mock_requests_get):
+    mock_requests_get<span style="color:#f92672">.</span>side_effect <span style="color:#f92672">=</span> <span style="color:#a6e22e">Exception</span>(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Boom</span><span style="color:#e6db74">&#34;</span>)
+    result <span style="color:#f92672">=</span> runner<span style="color:#f92672">.</span>invoke(console<span style="color:#f92672">.</span>main)
+    <span style="color:#66d9ef">assert</span> result<span style="color:#f92672">.</span>exit_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>
+</code></pre></div><p>You should generally have a single assertion per test case, because more
+fine-grained test cases make it easier to figure out why the test suite failed
+when it does.</p>
+<p>Tests for a feature or bugfix should be written <em>before</em> implementation. This is
+also known as &ldquo;<a href="https://www.icemobile.com/uploads/inline/test.driven.development.cartoon_0.jpeg">writing a failing
+test</a>&quot;.
+The reason for this is that it provides confidence that the tests are actually
+testing something, and do not simply pass because of a flaw in the tests
+themselves.</p>
+<h2 id="example-cli-refactoring">Example CLI: Refactoring</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne06.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne06.jpg"/> </a>
+</figure>
+
+<p>The great thing about a good test suite is that it allows you to refactor your
+code without fear of breaking it. Let&rsquo;s move the Wikipedia client to a separate
+module. Create a file <code>src/hypermodern-python/wikipedia.py</code> with the following
+contents:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern-python/wikipedia.py</span>
+<span style="color:#f92672">import</span> requests
+
+
+API_URL <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">https://en.wikipedia.org/api/rest_v1/page/random/summary</span><span style="color:#e6db74">&#34;</span>
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>():
+    <span style="color:#66d9ef">with</span> requests<span style="color:#f92672">.</span>get(API_URL) <span style="color:#66d9ef">as</span> response:
+        response<span style="color:#f92672">.</span>raise_for_status()
+        <span style="color:#66d9ef">return</span> response<span style="color:#f92672">.</span>json()
+</code></pre></div><p>The <code>console</code> module can now simply invoke <code>wikipedia.random_page</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern-python/console.py</span>
+<span style="color:#f92672">import</span> textwrap
+
+<span style="color:#f92672">import</span> click
+
+<span style="color:#f92672">from</span> . <span style="color:#f92672">import</span> __version__, wikipedia
+
+
+<span style="color:#a6e22e">@click.command</span>()
+<span style="color:#a6e22e">@click.version_option</span>(version<span style="color:#f92672">=</span>__version__)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">The hypermodern Python project.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+    data <span style="color:#f92672">=</span> wikipedia<span style="color:#f92672">.</span>random_page()
+
+    title <span style="color:#f92672">=</span> data[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">title</span><span style="color:#e6db74">&#34;</span>]
+    extract <span style="color:#f92672">=</span> data[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">extract</span><span style="color:#e6db74">&#34;</span>]
+
+    click<span style="color:#f92672">.</span>secho(title, fg<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">green</span><span style="color:#e6db74">&#34;</span>)
+    click<span style="color:#f92672">.</span>echo(textwrap<span style="color:#f92672">.</span>fill(extract))
+</code></pre></div><p>Finally, invoke Nox to see that nothing broke:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ nox -r
+...
+nox &gt; Ran multiple sessions:
+nox &gt; * tests-3.8: success
+nox &gt; * tests-3.7: success
+</code></pre></div><h2 id="example-cli-handling-exceptions-gracefully">Example CLI: Handling exceptions gracefully</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne07.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne07.jpg"/> </a>
+</figure>
+
+<p>If you run the example application without an Internet connection, your terminal
+will be filled with a long traceback. This is what happens when the Python
+interpreter is terminated by an unhandled exception. For common errors such as
+this, it would be better to print a friendly, informative message to the screen.</p>
+<p>Let&rsquo;s express this as a test case, by configuring the mock to raise a
+<code>RequestException</code>. (The <em>requests</em> library has more specific exception classes,
+but for the purposes of this example, we will only deal with the base class.)</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#f92672">import</span> requests
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_prints_message_on_request_error</span>(runner, mock_requests_get):
+    mock_requests_get<span style="color:#f92672">.</span>side_effect <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>RequestException
+    result <span style="color:#f92672">=</span> runner<span style="color:#f92672">.</span>invoke(console<span style="color:#f92672">.</span>main)
+    <span style="color:#66d9ef">assert</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Error</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">in</span> result<span style="color:#f92672">.</span>output
+</code></pre></div><p>The simplest way to get this test to pass is by converting the
+<code>RequestException</code> into a <code>ClickException</code>. When click encounters this
+exception, it prints the exception message to standard error and exits the
+program with a status code of 1. You can reuse the exception message by
+converting the original exception to a string.</p>
+<p>Here is the updated <code>wikipedia</code> module:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern-python/wikipedia.py</span>
+<span style="color:#f92672">import</span> click
+<span style="color:#f92672">import</span> requests
+
+
+API_URL <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">https://en.wikipedia.org/api/rest_v1/page/random/summary</span><span style="color:#e6db74">&#34;</span>
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>():
+    <span style="color:#66d9ef">try</span>:
+        <span style="color:#66d9ef">with</span> requests<span style="color:#f92672">.</span>get(API_URL) <span style="color:#66d9ef">as</span> response:
+            response<span style="color:#f92672">.</span>raise_for_status()
+            <span style="color:#66d9ef">return</span> response<span style="color:#f92672">.</span>json()
+    <span style="color:#66d9ef">except</span> requests<span style="color:#f92672">.</span>RequestException <span style="color:#66d9ef">as</span> error:
+        message <span style="color:#f92672">=</span> str(error)
+        <span style="color:#66d9ef">raise</span> click<span style="color:#f92672">.</span>ClickException(message)
+</code></pre></div><h2 id="example-cli-selecting-the-wikipedia-language-edition">Example CLI: Selecting the Wikipedia language edition</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne08.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne08.jpg"/> </a>
+</figure>
+
+<p>In this section, we add a command-line option to select the <a href="https://en.wikipedia.org/wiki/List_of_Wikipedias">language
+edition</a> of Wikipedia.</p>
+<p>Wikipedia editions are identified by a language code, which is used as a
+subdomain below wikipedia.org. Usually, this is the two-letter or three-letter
+language code assigned to the language by <a href="https://en.wikipedia.org/wiki/ISO_639-1">ISO
+639-1</a> and <a href="https://en.wikipedia.org/wiki/ISO_639-3">ISO
+639-3</a>. Here are some examples:</p>
+<ul>
+<li><code>fr</code> for the French Wikipedia</li>
+<li><code>jbo</code> for the <a href="https://xkcd.com/191/">Lojban Wikipedia</a></li>
+<li><code>ceb</code> for the <a href="https://en.wikipedia.org/wiki/Lsjbot">Cebuano Wikipedia</a></li>
+</ul>
+<p>As a first step, let&rsquo;s add an optional parameter for the language code to the
+<code>wikipedia.random_page</code> function. When an alternate language is passed, the API
+request should be sent to the corresponding Wikipedia edition. The test case is
+placed in a new test module named <code>test_wikipedia.py</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_wikipedia.py</span>
+<span style="color:#f92672">from</span> hypermodern_python <span style="color:#f92672">import</span> wikipedia
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_random_page_uses_given_language</span>(mock_requests_get):
+    wikipedia<span style="color:#f92672">.</span>random_page(language<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">de</span><span style="color:#e6db74">&#34;</span>)
+    args, _ <span style="color:#f92672">=</span> mock_requests_get<span style="color:#f92672">.</span>call_args
+    <span style="color:#66d9ef">assert</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">de.wikipedia.org</span><span style="color:#e6db74">&#34;</span> <span style="color:#f92672">in</span> args[<span style="color:#ae81ff">0</span>]
+</code></pre></div><p>The <code>mock_requests_get</code> fixture is now used by two test modules. You could move
+it to a separate module and import from there, but Pytest offers a <a href="https://pytest.readthedocs.io/en/latest/fixture.html#conftest-py-sharing-fixture-functions">more
+convenient
+way</a>:
+Fixtures placed in a <code>conftest.py</code> file are discovered automatically, and test
+modules at the same directory level can use them without explicit import. Create
+the new file at the top-level of your tests package, and move the fixture there:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/conftest.py</span>
+<span style="color:#f92672">import</span> pytest
+
+
+<span style="color:#a6e22e">@pytest.fixture</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mock_requests_get</span>(mocker):
+    mock <span style="color:#f92672">=</span> mocker<span style="color:#f92672">.</span>patch(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">requests.get</span><span style="color:#e6db74">&#34;</span>)
+    mock<span style="color:#f92672">.</span>return_value<span style="color:#f92672">.</span>__enter__<span style="color:#f92672">.</span>return_value<span style="color:#f92672">.</span>json<span style="color:#f92672">.</span>return_value <span style="color:#f92672">=</span> {
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">title</span><span style="color:#e6db74">&#34;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Lorem Ipsum</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">extract</span><span style="color:#e6db74">&#34;</span>: <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Lorem ipsum dolor sit amet</span><span style="color:#e6db74">&#34;</span>,
+    }
+    <span style="color:#66d9ef">return</span> mock
+</code></pre></div><p>To get the test to pass, we turn <code>API_URL</code> into a format string, and interpolate
+the specified language code into the URL using
+<a href="https://docs.python.org/3/library/stdtypes.html#str.format">str.format</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern-python/wikipedia.py</span>
+<span style="color:#f92672">import</span> click
+<span style="color:#f92672">import</span> requests
+
+
+API_URL <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">https://{language}.wikipedia.org/api/rest_v1/page/random/summary</span><span style="color:#e6db74">&#34;</span>
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>(language<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">en</span><span style="color:#e6db74">&#34;</span>):
+    url <span style="color:#f92672">=</span> API_URL<span style="color:#f92672">.</span>format(language<span style="color:#f92672">=</span>language)
+
+    <span style="color:#66d9ef">try</span>:
+        <span style="color:#66d9ef">with</span> requests<span style="color:#f92672">.</span>get(url) <span style="color:#66d9ef">as</span> response:
+            response<span style="color:#f92672">.</span>raise_for_status()
+            <span style="color:#66d9ef">return</span> response<span style="color:#f92672">.</span>json()
+    <span style="color:#66d9ef">except</span> requests<span style="color:#f92672">.</span>RequestException <span style="color:#66d9ef">as</span> error:
+        message <span style="color:#f92672">=</span> str(error)
+        <span style="color:#66d9ef">raise</span> click<span style="color:#f92672">.</span>ClickException(message)
+</code></pre></div><p>As the second step, we make the new functionality accessible from the command
+line, adding a <code>--language</code> option. The test case mocks the
+<code>wikipedia.random_page</code> function, and uses the
+<a href="https://docs.python.org/3/library/unittest.mock.html#unittest.mock.Mock.assert_called_with">assert_called_with</a>
+method on the mock to check that the language specified by the user is passed on
+to the function:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#a6e22e">@pytest.fixture</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mock_wikipedia_random_page</span>(mocker):
+    <span style="color:#66d9ef">return</span> mocker<span style="color:#f92672">.</span>patch(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">hypermodern_python.wikipedia.random_page</span><span style="color:#e6db74">&#34;</span>)
+
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_uses_specified_language</span>(runner, mock_wikipedia_random_page):
+    runner<span style="color:#f92672">.</span>invoke(console<span style="color:#f92672">.</span>main, [<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--language=pl</span><span style="color:#e6db74">&#34;</span>])
+    mock_wikipedia_random_page<span style="color:#f92672">.</span>assert_called_with(language<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">pl</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>We are now ready to implement the new functionality using the
+<a href="https://click.palletsprojects.com/en/7.x/options/">click.option</a> decorator.
+Without further ado, here is the final version of the <code>console</code> module:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern-python/console.py</span>
+<span style="color:#f92672">import</span> textwrap
+
+<span style="color:#f92672">import</span> click
+
+<span style="color:#f92672">from</span> . <span style="color:#f92672">import</span> __version__, wikipedia
+
+
+<span style="color:#a6e22e">@click.command</span>()
+<span style="color:#a6e22e">@click.option</span>(
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--language</span><span style="color:#e6db74">&#34;</span>,
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">-l</span><span style="color:#e6db74">&#34;</span>,
+    default<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">en</span><span style="color:#e6db74">&#34;</span>,
+    help<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Language edition of Wikipedia</span><span style="color:#e6db74">&#34;</span>,
+    metavar<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">LANG</span><span style="color:#e6db74">&#34;</span>,
+    show_default<span style="color:#f92672">=</span>True,
+)
+<span style="color:#a6e22e">@click.version_option</span>(version<span style="color:#f92672">=</span>__version__)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>(language):
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">The hypermodern Python project.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+    data <span style="color:#f92672">=</span> wikipedia<span style="color:#f92672">.</span>random_page(language<span style="color:#f92672">=</span>language)
+
+    title <span style="color:#f92672">=</span> data[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">title</span><span style="color:#e6db74">&#34;</span>]
+    extract <span style="color:#f92672">=</span> data[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">extract</span><span style="color:#e6db74">&#34;</span>]
+
+    click<span style="color:#f92672">.</span>secho(title, fg<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">green</span><span style="color:#e6db74">&#34;</span>)
+    click<span style="color:#f92672">.</span>echo(textwrap<span style="color:#f92672">.</span>fill(extract))
+</code></pre></div><p>You now have a polyglot random fact generator, and a fun way to test your
+language skills (and the Unicode skills of your terminal emulator).</p>
+<h2 id="using-fakes">Using fakes</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne09.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne09.jpg"/> </a>
+</figure>
+
+<p>Mocks help you test code units depending on bulky subsystems, but they are <a href="https://blog.pragmatists.com/test-doubles-fakes-mocks-and-stubs-1a7491dfa3da">not
+the only
+technique</a>
+to do so. For example, if your function requires a database connection, it may
+be both easier and more effective to pass an in-memory database than a mock
+object. Fake implementations are a good alternative to mock objects, which can
+be too forgiving when faced with wrong usage, and too tightly coupled to
+implementation details of the system under test (witness the <code>mock_requests_get</code>
+fixture). Large data objects can be generated by test object factories, instead
+of being replaced by mock objects (check out the excellent
+<a href="https://factoryboy.readthedocs.io/">factoryboy</a> package).</p>
+<p>Implementing a fake API is out of the scope of this tutorial, but we will cover
+one aspect of it: How to write a fixture which requires tear down code as well
+as set up code. Suppose you have written the following fake API implementation:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">FakeAPI</span>:
+    url <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">http://localhost:5000/</span><span style="color:#e6db74">&#34;</span>
+
+    <span style="color:#a6e22e">@classmethod</span>
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">create</span>(cls):
+        <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
+    
+    <span style="color:#66d9ef">def</span> <span style="color:#a6e22e">shutdown</span>(self):
+        <span style="color:#f92672">.</span><span style="color:#f92672">.</span><span style="color:#f92672">.</span>
+</code></pre></div><p>The following will not work:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@pytest.fixture</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fake_api</span>():
+    <span style="color:#66d9ef">return</span> FakeAPI<span style="color:#f92672">.</span>create()
+</code></pre></div><p>The API needs to be shut down after use, to free up resources such as the TCP
+port and the thread running the server. You can do this by writing the fixture
+as a <a href="https://docs.python.org/3/tutorial/classes.html#generators">generator</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@pytest.fixture</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fake_api</span>():
+    api <span style="color:#f92672">=</span> FakeAPI<span style="color:#f92672">.</span>create()
+    <span style="color:#66d9ef">yield</span> api
+    api<span style="color:#f92672">.</span>shutdown()
+</code></pre></div><p>Pytest takes care of running the generator, passing the yielded value to your
+test function, and executing the shutdown code after it returns. If setting up
+and tearing down the fixture is expensive, you may also consider extending the
+<a href="https://docs.pytest.org/en/latest/fixture.html#scope-sharing-a-fixture-instance-across-tests-in-a-class-module-or-session">scope</a>
+of the fixture. By default, fixtures are created once per test function.
+Instead, you could create the fake API server once per test session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@pytest.fixture</span>(scope<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">session</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">fake_api</span>():
+    api <span style="color:#f92672">=</span> FakeAPI<span style="color:#f92672">.</span>create()
+    <span style="color:#66d9ef">yield</span> api
+    api<span style="color:#f92672">.</span>shutdown()
+</code></pre></div><h2 id="end-to-end-testing">End-to-end testing</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-02/verne10.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/verne10.jpg"/> </a>
+</figure>
+
+<p>Testing against the live production server is bad practice for unit tests, but
+there is nothing like the confidence you get from seeing your code work in a
+real environment. Such tests are known as <em>end-to-end tests</em>, and while they are
+usually too slow, brittle, and unpredictable for the kind of automated testing
+you would want to do on a CI server or in the midst of development, they do have
+their place.</p>
+<p>Let&rsquo;s reinstate the original test case, and use Pytest&rsquo;s
+<a href="https://docs.pytest.org/en/latest/example/markers.html">markers</a> to apply a
+custom mark. This will allow you to select or skip them later, using Pytest&rsquo;s
+<code>-m</code> option.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#a6e22e">@pytest.mark.e2e</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_succeeds_in_production_env</span>(runner):
+    result <span style="color:#f92672">=</span> runner<span style="color:#f92672">.</span>invoke(console<span style="color:#f92672">.</span>main)
+    <span style="color:#66d9ef">assert</span> result<span style="color:#f92672">.</span>exit_code <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>
+</code></pre></div><p>Register the <code>e2e</code> marker using the <code>pytest_configure</code> hook, as shown below. The
+hook is placed in the <code>conftest.py</code> file, at the top-level of your tests
+package. This ensures that Pytest can discover the module and use it for the
+entire test suite.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/conftest.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pytest_configure</span>(config):
+    config<span style="color:#f92672">.</span>addinivalue_line(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">markers</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">e2e: mark as end-to-end test.</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>Finally, exclude end-to-end tests from automated testing by passing <code>-m &quot;not e2e&quot;</code> to Pytest:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#f92672">import</span> nox
+
+
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tests</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> [<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--cov</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">-m</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">not e2e</span><span style="color:#e6db74">&#34;</span>]
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">install</span><span style="color:#e6db74">&#34;</span>, external<span style="color:#f92672">=</span>True)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">pytest</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>You can now run end-to-end tests by passing <code>-m e2e</code> to the Nox session, using a
+double dash (<code>--</code>) to separate them from Nox&rsquo;s own options. For example, here&rsquo;s
+how you would run end-to-end tests inside the testing environment for Python
+3.8:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs tests-3.8 -- -m e2e
+</code></pre></div><h2 id="thanks-for-reading">Thanks for reading!</h2>
+<p>The <a href="../hypermodern-python-03-linting">next chapter</a> is about linting your
+project.</p>
+<p><figure class="centered"><a href="../hypermodern-python-03-linting">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-02/train.jpg"/> </a>
+</figure>
+
+<span class="centered"><a href="../hypermodern-python-03-linting">Continue to the next chapter</a></span></p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>The images in this chapter come from Émile-Antoine Bayard&rsquo;s Illustrations
+for From the Earth to the Moon (De la terre à la lune) by Jules Verne (1870)
+(source: <a href="https://archive.org/details/delaterrelalu00vern">Internet Archive</a>
+via <a href="https://publicdomainreview.org/collection/emile-antoine-bayard-s-illustrations-for-around-the-moon-by-jules-verne-1870">The Public Domain
+Review</a>) <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-141256188-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

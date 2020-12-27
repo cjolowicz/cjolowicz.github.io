@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Claudio Jolowicz">
+    <meta name="description" content="Claudio Jolowicz&#39;s website">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hypermodern Python Chapter 3: Linting"/>
+<meta name="twitter:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism."/>
+
+    <meta property="og:title" content="Hypermodern Python Chapter 3: Linting" />
+<meta property="og:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cjolowicz.github.io/posts/hypermodern-python-03-linting/" />
+<meta property="article:published_time" content="2020-01-15T07:04:32+01:00" />
+<meta property="article:modified_time" content="2020-01-15T07:04:32+01:00" />
+
+
+    
+      <base href="https://cjolowicz.github.io/posts/hypermodern-python-03-linting/">
+    
+    <title>
+  Hypermodern Python Chapter 3: Linting · Claudio Jolowicz
+</title>
+
+    
+      <link rel="canonical" href="https://cjolowicz.github.io/posts/hypermodern-python-03-linting/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://cjolowicz.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://cjolowicz.github.io/">
+      Claudio Jolowicz
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://cjolowicz.github.io/posts/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="http://claudiojolowicz.com/">Music</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Hypermodern Python Chapter 3: Linting</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-01-15T07:04:32&#43;01:00'>
+                January 15, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              14 minutes read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://cjolowicz.github.io/tags/python/">python</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/nox/">nox</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/flake8/">flake8</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/black/">black</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/bandit/">bandit</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/safety/">safety</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/pre-commit/">pre-commit</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <p><a href="https://medium.com/@cjolowicz/hypermodern-python-3-linting-e2f15708da80">Read this article on Medium</a></p>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote01.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote01.jpg"/> </a>
+</figure>
+
+<p>In this third installment of the Hypermodern Python series, I&rsquo;m going to discuss
+how to add linting, code formatting, and static analysis to your project.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>
+Previously, we discussed <a href="../hypermodern-python-02-testing">Automated Testing</a>.
+(If you start reading here, you can also
+<a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter02.zip">download</a>
+the code for the previous chapter.)</p>
+<p>Here are the topics covered in this chapter on Linting in Python:</p>
+<ul>
+<li><a href="#linting-with-flake8">Linting with Flake8</a></li>
+<li><a href="#code-formatting-with-black">Code formatting with Black</a></li>
+<li><a href="#checking-imports-with-flake8-import-order">Checking imports with flake8-import-order</a></li>
+<li><a href="#finding-more-bugs-with-flake8-bugbear">Finding more bugs with flake8-bugbear</a></li>
+<li><a href="#identifying-security-issues-with-bandit">Identifying security issues with Bandit</a></li>
+<li><a href="#finding-security-vulnerabilities-in-dependencies-with-safety">Finding security vulnerabilities in dependencies with Safety</a></li>
+<li><a href="#managing-dependencies-in-nox-sessions-with-poetry">Managing dependencies in Nox sessions with Poetry</a></li>
+<li><a href="#managing-git-hooks-with-precommit">Managing Git hooks with pre-commit</a></li>
+</ul>
+<p>Here is a full list of the articles in this series:</p>
+<ul>
+<li><a href="../hypermodern-python-01-setup">Chapter 1: Setup</a></li>
+<li><a href="../hypermodern-python-02-testing">Chapter 2: Testing</a></li>
+<li><a href="../hypermodern-python-03-linting">Chapter 3: Linting</a> (this article)</li>
+<li><a href="../hypermodern-python-04-typing">Chapter 4: Typing</a></li>
+<li><a href="../hypermodern-python-05-documentation">Chapter 5: Documentation</a></li>
+<li><a href="../hypermodern-python-06-ci-cd">Chapter 6: CI/CD</a></li>
+</ul>
+<p>This guide has a companion repository:
+<a href="https://github.com/cjolowicz/hypermodern-python">cjolowicz/hypermodern-python</a>.
+Each article in the guide corresponds to a set of commits in the GitHub
+repository:</p>
+<ul>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/compare/chapter02...chapter03">View changes</a></li>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter03.zip">Download code</a></li>
+</ul>
+<h2 id="linting-with-flake8">Linting with Flake8</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote02.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote02.jpg"/> </a>
+</figure>
+
+<p>Linters analyze source code to flag programming errors, bugs, stylistic errors,
+and suspicious constructs. The most common ones for Python are
+<a href="https://www.pylint.org">pylint</a> and the linter aggregators
+<a href="http://flake8.pycqa.org">flake8</a>, <a href="https://github.com/klen/pylama">pylama</a>, and
+<a href="https://prospector.readthedocs.io/">prospector</a>. There are also multi-language
+linter frameworks such as <a href="https://pre-commit.com/">pre-commit</a> and
+<a href="https://coala.io/#/home?lang=Python">coala</a>. In this chapter, we use Flake8 and
+pre-commit.</p>
+<p>Add a Nox session to run Flake8 on your codebase:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+locations <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">src</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">tests</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">noxfile.py</span><span style="color:#e6db74">&#34;</span>
+
+
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    session<span style="color:#f92672">.</span>install(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>By default, we run Flake8 on three locations: the package source tree, the test
+suite, and <code>noxfile.py</code> itself. You can override this by passing specific source
+files, separated from Nox&rsquo;s own options by <code>--</code>. The
+<a href="https://nox.thea.codes/en/stable/config.html#nox.sessions.Session.install">session.install</a>
+method installs Flake8 into the virtual environment via
+<a href="https://pip.pypa.io/">pip</a>.</p>
+<p>Flake8 glues together several tools. The messages produced by these tools are
+assigned error codes, prefixed by one or more letters. The prefixes group the
+errors into so-called violation classes:</p>
+<ul>
+<li><code>F</code> are errors reported by <a href="https://github.com/PyCQA/pyflakes">pyflakes</a>, a
+tool which parses source files and finds invalid Python code.</li>
+<li><code>W</code> and <code>E</code> are warnings and errors reported by
+<a href="https://github.com/pycqa/pycodestyle">pycodestyle</a>, which checks your Python
+code against some of the style conventions in <a href="http://www.python.org/dev/peps/pep-0008/">PEP
+8</a>.</li>
+<li><code>C</code> are violations reported by <a href="https://github.com/PyCQA/mccabe">mccabe</a>,
+which checks the code complexity of your Python package against a configured
+limit.</li>
+</ul>
+<p>Configure Flake8 using the <code>.flake8</code> configuration file, enabling all the
+built-in violation classes and setting the complexity limit:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">select</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">C,E,F,W</span>
+<span style="color:#a6e22e">max-complexity</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">10</span>
+</code></pre></div><p>By default, Nox runs all sessions defined in <code>noxfile.py</code>. Use the <a href="https://nox.thea.codes/en/stable/usage.html#specifying-one-or-more-sessions">--session
+(-s)</a>
+option to restrict it to a specific session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs lint
+</code></pre></div><p>There are many <a href="https://github.com/DmytroLitvinov/awesome-flake8-extensions">awesome Flake8
+extensions</a>. Some
+of these will be presented in later sections.</p>
+<h2 id="code-formatting-with-black">Code formatting with Black</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote03.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote03.jpg"/> </a>
+</figure>
+
+<p>The next addition to our toolbox is <a href="https://github.com/psf/black">Black</a>, the
+uncompromising Python code formatter. One of its greatest features is its lack
+of configurability. Blackened code looks the same regardless of the project
+you&rsquo;re reading.</p>
+<p>Adding Black as a Nox session is straightforward:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">black</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    session<span style="color:#f92672">.</span>install(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">black</span><span style="color:#e6db74">&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">black</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>With the Nox session in place, you can reformat your code like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ nox -rs black
+
+nox &gt; Running session black
+nox &gt; Creating virtual environment <span style="color:#f92672">(</span>virtualenv<span style="color:#f92672">)</span> using python3.8 in .nox/black
+nox &gt; pip install black
+nox &gt; black src tests noxfile.py
+All <span style="color:#66d9ef">done</span>! ✨ 🍰 ✨
+<span style="color:#ae81ff">5</span> files left unchanged.
+nox &gt; Session black was successful.
+</code></pre></div><p>Invoking <code>nox</code> without arguments triggers all the sessions, including Black. It
+would be better to only validate the coding style without modifying the
+conflicting files. Exclude Black from the sessions run by default, by setting
+<code>nox.options.sessions</code> at the top:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+nox<span style="color:#f92672">.</span>options<span style="color:#f92672">.</span>sessions <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">lint</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">tests</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>Instead, check adherence to the Black code style inside the linter session. The
+<a href="https://github.com/peterjc/flake8-black">flake8-black</a> plugin generates
+warnings if it detects that Black would reformat a source file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+<span style="display:block;width:100%;background-color:#3c3d38">    session<span style="color:#f92672">.</span>install(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-black</span><span style="color:#e6db74">&#34;</span>)
+</span>    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)</code></pre></div>
+<p>Configure Flake8 to enable the <code>flake8-black</code> warnings, which are prefixed by
+<code>BLK</code>. Also, some built-in warnings do not align well with Black. You need to
+ignore warnings <code>E203</code> (<em>Whitespace before &lsquo;:'</em>), and <code>W503</code> (<em>Line break before
+binary operator</em>), and set the maximum line length to a more permissive value:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">select</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">BLK,C,E,F,W</span>
+<span style="color:#a6e22e">ignore</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">E203,W503</span>
+<span style="color:#a6e22e">max-line-length</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">88</span>
+</code></pre></div><h2 id="checking-imports-with-flake8-import-order">Checking imports with flake8-import-order</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote04.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote04.jpg"/> </a>
+</figure>
+
+<p>The <a href="https://github.com/PyCQA/flake8-import-order">flake8-import-order</a> plugin
+checks that import statements are grouped and ordered in a consistent and <a href="https://www.python.org/dev/peps/pep-0008/#imports">PEP
+8</a>-compliant way. Imports
+should be arranged in three groups, like this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># standard library</span>
+<span style="color:#f92672">import</span> time
+
+<span style="color:#75715e"># third-party packages</span>
+<span style="color:#f92672">import</span> click
+
+<span style="color:#75715e"># local packages</span>
+<span style="color:#f92672">from</span> hypermodern_python <span style="color:#f92672">import</span> wikipedia
+</code></pre></div><p>Install the plugin in the linter session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+<span style="display:block;width:100%;background-color:#3c3d38">    session<span style="color:#f92672">.</span>install(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-black</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-import-order</span><span style="color:#e6db74">&#34;</span>)
+</span>    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)</code></pre></div>
+<p>Enable the warnings emitted by the plugin (<code>I</code> like <em>import</em>).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">select</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">BLK,C,E,F,I,W</span>
+</code></pre></div><p>Inform the plugin about package names which are considered local:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">application-import-names</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">hypermodern_python,tests</span>
+</code></pre></div><p>Adopt the <a href="https://google.github.io/styleguide/pyguide.html?showone=Imports_formatting#313-imports-formatting">Google
+styleguide</a>
+with respect to the grouping and ordering details:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">import-order-style</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">google</span>
+</code></pre></div><p>Recommending an import linter in 2020 is not an easy task, as there is currently
+a lot of movement in this area. The excellent plugin recommended in this section
+has been placed in <a href="https://github.com/PyCQA/flake8-import-order/issues/163#issuecomment-468923340">maintenance
+mode</a>.
+An alternative is <a href="https://timothycrosley.github.io/isort/">isort</a>, which comes
+with Flake8 integration via
+<a href="https://github.com/gforcada/flake8-isort">flake8-isort</a> and additionally
+supports rewriting files. isort enjoys widespread popularity, but has also
+attracted
+much <!-- [](https://github.com/PyCQA/flake8-import-order/issues/163#issuecomment-450659551) -->
+<a href="https://github.com/psf/black/issues/333#issuecomment-414123095">criticism</a>
+(which its author <a href="https://github.com/psf/black/issues/333#issuecomment-490241054">intends to
+address</a> in the
+upcoming major release). If you are looking for a tool to rewrite imports, you
+should also have a look at
+<a href="https://github.com/asottile/reorder_python_imports">asottile/reorder-python-imports</a>
+and <a href="https://github.com/sqlalchemyorg/zimports">sqlalchemyorg/zimports</a>.</p>
+<!--
+[How to integrate isort with this project](https://github.com/cjolowicz/hypermodern-python/compare/chapter03...chapter03-isort)
+-->
+<h2 id="finding-more-bugs-with-flake8-bugbear">Finding more bugs with flake8-bugbear</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote05.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote05.jpg"/> </a>
+</figure>
+
+<p>The <a href="https://github.com/PyCQA/flake8-bugbear">flake8-bugbear</a> plugin helps you
+find various bugs and design problems in your programs. Add the plugin to the
+linter session in your <code>noxfile.py</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    session<span style="color:#f92672">.</span>install(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-black</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-bugbear</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-import-order</span><span style="color:#e6db74">&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>Enable the plugin warnings in Flake8&rsquo;s configuration file (<code>B</code> like <em>bugbear</em>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">select</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">B,B9,BLK,C,E,F,I,W</span>
+</code></pre></div><p><code>B9</code> is required for Bugbear&rsquo;s more opinionated warnings, which are disabled by
+default. In particular, <code>B950</code> checks the maximum line length like the built-in
+<code>E501</code>, but with a tolerance margin of 10%. Ignore the built-in error <code>E501</code> and
+set the maximum line length to a sane value:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">ignore</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">E203,E501,W503</span>
+<span style="color:#a6e22e">max-line-length</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">80</span>
+</code></pre></div><h2 id="identifying-security-issues-with-bandit">Identifying security issues with Bandit</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote06.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote06.jpg"/> </a>
+</figure>
+
+<p><a href="https://github.com/PyCQA/bandit">Bandit</a> is a tool designed to find common
+security issues in Python code. Install it via the
+<a href="https://github.com/tylerwince/flake8-bandit">flake8-bandit</a> plugin:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    session<span style="color:#f92672">.</span>install(
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-bandit</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-black</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-bugbear</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-import-order</span><span style="color:#e6db74">&#34;</span>,
+    )
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>Enable the plugin warnings in Flake8&rsquo;s configuration file (<code>S</code> like <em>security</em>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">select</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">B,B9,BLK,C,E,F,I,S,W</span>
+<span style="color:#a6e22e">...</span>
+</code></pre></div><p>Bandit flags uses of <code>assert</code> to enforce interface constraints because
+assertions are removed when compiling to optimized byte code. You should disable
+this warning for your test suite, as Pytest uses assertions to verify
+expectations in tests:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">per-file-ignores</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">tests/*:S101</span>
+<span style="color:#a6e22e">...</span>
+</code></pre></div><p>Bandit finds known issues that can be detected via static file checking. If you
+are very concerned with security, you should consider using additional tools,
+for example a fuzzing tool such as
+<a href="https://github.com/jwilk/python-afl">python-afl</a>.</p>
+<h2 id="finding-security-vulnerabilities-in-dependencies-with-safety">Finding security vulnerabilities in dependencies with Safety</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote09.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote09.jpg"/> </a>
+</figure>
+
+<p><a href="https://github.com/pyupio/safety">Safety</a> checks the dependencies of your
+project for known security vulnerabilities, using a curated database of insecure
+Python packages. Add the following Nox session to run Safety on your project:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> tempfile
+
+
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">safety</span>(session):
+    <span style="color:#66d9ef">with</span> tempfile<span style="color:#f92672">.</span>NamedTemporaryFile() <span style="color:#66d9ef">as</span> requirements:
+        session<span style="color:#f92672">.</span>run(
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">export</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--dev</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--format=requirements.txt</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--without-hashes</span><span style="color:#e6db74">&#34;</span>,
+            f<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--output={requirements.name}</span><span style="color:#e6db74">&#34;</span>,
+            external<span style="color:#f92672">=</span>True,
+        )
+        session<span style="color:#f92672">.</span>install(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">safety</span><span style="color:#e6db74">&#34;</span>)
+        session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">safety</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">check</span><span style="color:#e6db74">&#34;</span>, f<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--file={requirements.name}</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--full-report</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>The session uses the <a href="https://python-poetry.org/docs/cli/#export">poetry export</a>
+command to convert Poetry&rsquo;s lock file to a <a href="https://pip.readthedocs.io/en/stable/user_guide/#requirements-files">requirements
+file</a>, for
+consumption by Safety. The standard
+<a href="https://docs.python.org/3/library/tempfile.html">tempfile</a> module is used to
+create a temporary file for the requirements.</p>
+<p>Include Safety in the default Nox sessions by adding it to
+<code>nox.options.sessions</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+nox<span style="color:#f92672">.</span>options<span style="color:#f92672">.</span>sessions <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">lint</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">safety</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">tests</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>To see how Safety works, install the infamous
+<a href="https://pypi.org/project/insecure-package/">insecure-package</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add insecure-package
+</code></pre></div><p>Here&rsquo;s what Safety has to say about this:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ nox -rs safety
+
+nox &gt; Running session safety
+nox &gt; Re-using existing virtual environment at .nox/safety.
+nox &gt; poetry export --dev --format<span style="color:#f92672">=</span>requirements.txt --without-hashes --output<span style="color:#f92672">=</span>/var/folders/13/g258r36n3fd7rj0jrgln5gd04dw8n3/T/tmpkgcb549m
+nox &gt; poetry export --dev --format<span style="color:#f92672">=</span>requirements.txt --output<span style="color:#f92672">=</span>/var/folders/13/g258r36n3fd7rj0jrgln5gd04dw8n3/T/tmpyejztram
+nox &gt; pip install --constraint<span style="color:#f92672">=</span>/var/folders/13/g258r36n3fd7rj0jrgln5gd04dw8n3/T/tmpyejztram safety
+nox &gt; safety check --file<span style="color:#f92672">=</span>/var/folders/13/g258r36n3fd7rj0jrgln5gd04dw8n3/T/tmpkgcb549m --full-report
+╒══════════════════════════════════════════════════════════════════════════════╕
+│                                                                              │
+│                               /$$$$$$            /$$                         │
+│                              /$$__  $$          | $$                         │
+│           /$$$$$$$  /$$$$$$ | $$  <span style="color:#ae81ff">\_</span>_//$$$$$$  /$$$$$$   /$$   /$$           │
+│          /$$_____/ |____  $$| $$$$   /$$__  $$|_  $$_/  | $$  | $$           │
+│         |  $$$$$$   /$$$$$$$| $$_/  | $$$$$$$$  | $$    | $$  | $$           │
+│          <span style="color:#ae81ff">\_</span>___  $$ /$$__  $$| $$    | $$_____/  | $$ /$$| $$  | $$           │
+│          /$$$$$$$/|  $$$$$$$| $$    |  $$$$$$$  |  $$$$/|  $$$$$$$           │
+│         |_______/  <span style="color:#ae81ff">\_</span>______/|__/     <span style="color:#ae81ff">\_</span>______/   <span style="color:#ae81ff">\_</span>__/   <span style="color:#ae81ff">\_</span>___  $$           │
+│                                                          /$$  | $$           │
+│                                                         |  $$$$$$/           │
+│  by pyup.io                                              <span style="color:#ae81ff">\_</span>_____/            │
+│                                                                              │
+╞══════════════════════════════════════════════════════════════════════════════╡
+│ REPORT                                                                       │
+│ checked <span style="color:#ae81ff">48</span> packages, using default DB                                        │
+╞════════════════════════════╤═══════════╤══════════════════════════╤══════════╡
+│ package                    │ installed │ affected                 │ ID       │
+╞════════════════════════════╧═══════════╧══════════════════════════╧══════════╡
+│ insecure-package           │ 0.1.0     │ &lt;0.2.0                   │ <span style="color:#ae81ff">25853</span>    │
+╞══════════════════════════════════════════════════════════════════════════════╡
+│ This is an insecure package with lots of exploitable security                │
+│ vulnerabilities.                                                             │
+╘══════════════════════════════════════════════════════════════════════════════╛
+nox &gt; Command safety check --file<span style="color:#f92672">=</span>/var/folders/13/g258r36n3fd7rj0jrgln5gd04dw8n3/T/tmpkgcb549m --full-report failed with exit code <span style="color:#ae81ff">255</span>
+nox &gt; Session safety failed.
+</code></pre></div><p>Don&rsquo;t forget to uninstall this monster (just kidding, it&rsquo;s an empty package
+flagged by Safety DB for testing purposes):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry remove insecure-package
+</code></pre></div><p>Feel free to re-run Safety via Nox.</p>
+<h2 id="managing-dependencies-in-nox-sessions-with-poetry">Managing dependencies in Nox sessions with Poetry</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote07.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote07.jpg"/> </a>
+</figure>
+
+<p>In this section, I describe how to use Poetry to manage development dependencies
+in your Nox sessions, and how to make your Nox sessions more reproducible.</p>
+<p>In the <a href="../hypermodern-python-01-setup">first chapter</a>, we saw that Poetry
+writes the exact version of each package dependency to a file named
+<code>poetry.lock</code>. The same is done for development dependencies like <code>pytest</code>. This
+is known as <em>pinning</em>, and it allows you to build and test your package in a
+predictable and deterministic way.</p>
+<p>By contrast, this is how we have been installing packages into Nox sessions so
+far:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">session<span style="color:#f92672">.</span>install(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>No version specified! Nox will install whatever pip considers the latest version
+when the session is run. The checks may succeed when you run them on your local
+machine, but suddenly break on another developer&rsquo;s machine or on a Continuous
+Integration server, due to a change to Flake8 or one of its dependencies. These
+things happen all the time, and the problem accumulates quickly as the
+dependencies of your project grow.</p>
+<p>You could pin Flake8 using something like the following:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">session<span style="color:#f92672">.</span>install(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8==3.7.9</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>This approach improves the situation, but it has some limitations:</p>
+<ul>
+<li>We&rsquo;re back to handling requirements manually, rather than using Poetry&rsquo;s rich
+support for dependency management.</li>
+<li>The check is still not deterministic, because dependencies of dependencies
+remain unpinned. (Flake8 is a good example for this: At its core, it
+aggregates several more specialized tools. While Flake8 <a href="http://flake8.pycqa.org/en/latest/faq.html#why-does-flake8-use-ranges-for-its-dependencies">protects you from
+breaking
+changes</a>
+to these tools, their exact versions are still left to chance.)</li>
+</ul>
+<p>How about we declare Flake8 as a <em>development dependency</em> of our project, like
+we did with Pytest in the previous chapter? Then we can benefit from Poetry as a
+dependency manager, and record the versions of Flake8 and its dependencies in
+its lock file. &ndash; Well, there is a catch. Look how we installed development
+dependencies in the Nox session for testing:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">install</span><span style="color:#e6db74">&#34;</span>, external<span style="color:#f92672">=</span>True)
+</code></pre></div><p>This command installs a bunch of things our linting session does not need:</p>
+<ul>
+<li>the package under development</li>
+<li>the package dependencies</li>
+<li>unrelated development dependencies (e.g. Pytest)</li>
+</ul>
+<p>A major difference between testing and linting is that you need to install your
+package to be able to run the test suite, but you don&rsquo;t need to install your
+package to run linters on it. Linters are <em>static analysis tools</em>, they don&rsquo;t
+need to run your program.</p>
+<p>Wouldn&rsquo;t it be great if you could install individual packages with
+<code>session.install</code>, but somehow use Poetry&rsquo;s lock file to constrain their
+versions? Fortunately, there is a pip feature that let&rsquo;s you do exactly this:
+<a href="https://pip.pypa.io/en/stable/user_guide/#constraints-files">constraints
+files</a>. If you have
+used a <code>requirements.txt</code> file before, the format is exactly the same. And
+Poetry has a command to export its lock file to requirements format. So we have
+all the building blocks for a solution.</p>
+<p>The function <code>install_with_constraints</code> below is a wrapper for
+<code>session.install</code>. It generates a constraints file by running <a href="https://python-poetry.org/docs/cli/#export">poetry
+export</a>, and passes that file to pip
+using its <code>--constraint</code> option. The function uses the standard
+<a href="https://docs.python.org/3/library/tempfile.html">tempfile</a> module to create a
+temporary file for the constraints.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">install_with_constraints</span>(session, <span style="color:#f92672">*</span>args, <span style="color:#f92672">*</span><span style="color:#f92672">*</span>kwargs):
+    <span style="color:#66d9ef">with</span> tempfile<span style="color:#f92672">.</span>NamedTemporaryFile() <span style="color:#66d9ef">as</span> requirements:
+        session<span style="color:#f92672">.</span>run(
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">export</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--dev</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--format=requirements.txt</span><span style="color:#e6db74">&#34;</span>,
+            f<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--output={requirements.name}</span><span style="color:#e6db74">&#34;</span>,
+            external<span style="color:#f92672">=</span>True,
+        )
+        session<span style="color:#f92672">.</span>install(f<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--constraint={requirements.name}</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args, <span style="color:#f92672">*</span><span style="color:#f92672">*</span>kwargs)
+</code></pre></div><p>Change the Nox sessions to call the <code>install_with_constraints</code> wrapper instead
+of invoking <code>session.install</code> directly:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">black</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    install_with_constraints(session, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">black</span><span style="color:#e6db74">&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">black</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+
+
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    install_with_constraints(
+        session,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-bandit</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-black</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-bugbear</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-import-order</span><span style="color:#e6db74">&#34;</span>,
+    )
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+
+
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">safety</span>(session):
+    <span style="color:#66d9ef">with</span> tempfile<span style="color:#f92672">.</span>NamedTemporaryFile() <span style="color:#66d9ef">as</span> requirements:
+        session<span style="color:#f92672">.</span>run(
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">export</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--dev</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--format=requirements.txt</span><span style="color:#e6db74">&#34;</span>,
+            <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--without-hashes</span><span style="color:#e6db74">&#34;</span>,
+            f<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--output={requirements.name}</span><span style="color:#e6db74">&#34;</span>,
+            external<span style="color:#f92672">=</span>True,
+        )
+        install_with_constraints(session, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">safety</span><span style="color:#e6db74">&#34;</span>)
+        session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">safety</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">check</span><span style="color:#e6db74">&#34;</span>, f<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--file={requirements.name}</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--full-report</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>You can now use Poetry to manage Black, Flake8, and the other tools as
+development dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    black <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    flake8 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    flake8-bandit <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    flake8-black <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    flake8-bugbear <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    flake8-import-order <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    safety
+</code></pre></div><p>You should also adapt the testing session. That session only needs packages
+required for running the test suite, and should not be cluttered by anything
+else. Instead of simply invoking <code>poetry install</code>, pass the <code>--no-dev</code> option.
+This excludes development dependencies, and installs only the package itself and
+its dependencies. Then install the test requirements explicitly using
+<code>install_with_constraints</code>. Here is the rewritten Nox session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tests</span>(session):
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> [<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--cov</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">-m</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">not e2e</span><span style="color:#e6db74">&#34;</span>]
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">install</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--no-dev</span><span style="color:#e6db74">&#34;</span>, external<span style="color:#f92672">=</span>True)
+    install_with_constraints(
+        session, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">coverage[toml]</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">pytest</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">pytest-cov</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">pytest-mock</span><span style="color:#e6db74">&#34;</span>
+    )
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">pytest</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>Your linter checks are now deterministic, and your Nox sessions benefit from
+Poetry&rsquo;s convenient and reliable dependency management. ✌</p>
+<h2 id="managing-git-hooks-with-pre-commit">Managing Git hooks with pre-commit</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote08.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote08.jpg"/> </a>
+</figure>
+
+<p>Git provides <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">hooks</a>
+which allow you to run custom commands when important actions occur, such as a
+commit or push. You can leverage this to run automated checks when you commit
+changes. <a href="https://pre-commit.com/">pre-commit</a> is a framework for managing and
+maintaining such hooks. Use it to integrate the best industry standard linters
+into your workflow, even those written in a language other than Python.</p>
+<p>Install pre-commit via <a href="https://pip.readthedocs.org/">pip</a> or
+<a href="https://github.com/pipxproject/pipx">pipx</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">pip install --user --upgrade pre-commit
+</code></pre></div><p>Configure pre-commit using the <code>.pre-commit-config.yaml</code> configuration file, in
+the top-level directory of your repository. Let&rsquo;s start with the following
+sample configuration:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .pre-commit-config.yaml</span>
+<span style="color:#66d9ef">repos</span>:
+-   <span style="color:#66d9ef">repo</span>: https://github.com/pre-commit/pre-commit-hooks
+    <span style="color:#66d9ef">rev</span>: v2<span style="color:#ae81ff">.3</span><span style="color:#ae81ff">.0</span>
+    <span style="color:#66d9ef">hooks</span>:
+    -   <span style="color:#66d9ef">id</span>: check-yaml
+    -   <span style="color:#66d9ef">id</span>: end-of-file-fixer
+    -   <span style="color:#66d9ef">id</span>: trailing-whitespace
+-   <span style="color:#66d9ef">repo</span>: https://github.com/psf/black
+    <span style="color:#66d9ef">rev</span>: <span style="color:#ae81ff">19.</span>3b0
+    <span style="color:#66d9ef">hooks</span>:
+    -   <span style="color:#66d9ef">id</span>: black
+</code></pre></div><p>Install the hooks by running the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">pre-commit install
+</code></pre></div><p>The hooks run automatically every time you invoke <code>git commit</code>, applying checks
+to any newly created or modified files. When you add new hooks (like just now),
+you can trigger them manually for all files using the following command:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ pre-commit run --all-files
+
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Initializing environment <span style="color:#66d9ef">for</span> https://github.com/pre-commit/pre-commit-hooks.
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Initializing environment <span style="color:#66d9ef">for</span> https://github.com/psf/black.
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Installing environment <span style="color:#66d9ef">for</span> https://github.com/pre-commit/pre-commit-hooks.
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Once installed this environment will be reused.
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> This may take a few minutes...
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Installing environment <span style="color:#66d9ef">for</span> https://github.com/psf/black.
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> Once installed this environment will be reused.
+<span style="color:#f92672">[</span>INFO<span style="color:#f92672">]</span> This may take a few minutes...
+Check Yaml....................................................Passed
+Fix End of Files..............................................Failed
+- hook id: end-of-file-fixer
+- exit code: <span style="color:#ae81ff">1</span>
+- files were modified by this hook
+
+Fixing LICENSE
+
+Trim Trailing Whitespace......................................Passed
+black.........................................................Passed
+</code></pre></div><p>As you can see from the output, the <code>end-of-file-fixer</code> hook failed because the
+license file was missing a final newline. The hook already appended the missing
+newline to the file, so you can simply commit the file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">git commit --message<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;Fix missing newline at end of LICENSE&#34;</span> LICENSE
+</code></pre></div><p>There is a problem though: The sample configuration pins Black to a specific
+version, and so does Poetry&rsquo;s lock file. This setup requires you to keep the
+versions aligned manually, and can result in failed checks when the environments
+managed by pre-commit, Poetry, and Nox drift apart.</p>
+<p>Let&rsquo;s replace the Black entry using a <a href="https://pre-commit.com/#repository-local-hooks">repository-local
+hook</a>, and run Black in the
+development environment created by Poetry:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .pre-commit-config.yaml</span>
+<span style="color:#66d9ef">repos</span>:
+-   <span style="color:#66d9ef">repo</span>: https://github.com/pre-commit/pre-commit-hooks
+    <span style="color:#66d9ef">rev</span>: v2<span style="color:#ae81ff">.3</span><span style="color:#ae81ff">.0</span>
+    <span style="color:#66d9ef">hooks</span>:
+    -   <span style="color:#66d9ef">id</span>: check-yaml
+    -   <span style="color:#66d9ef">id</span>: end-of-file-fixer
+    -   <span style="color:#66d9ef">id</span>: trailing-whitespace
+-   <span style="color:#66d9ef">repo</span>: local
+    <span style="color:#66d9ef">hooks</span>:
+    -   <span style="color:#66d9ef">id</span>: black
+        <span style="color:#66d9ef">name</span>: black
+        <span style="color:#66d9ef">entry</span>: poetry run black
+        <span style="color:#66d9ef">language</span>: system
+        <span style="color:#66d9ef">types</span>: [python]
+</code></pre></div><p>This method allows you to rely on Poetry to manage development dependencies,
+without worrying about version mismatch caused by other tools.</p>
+<p>Use the same technique to run Flake8 from the pre-commit hook:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yaml" data-lang="yaml"><span style="color:#75715e"># .pre-commit-config.yaml</span>
+-   <span style="color:#66d9ef">repo</span>: local
+    <span style="color:#66d9ef">hooks</span>:
+    -   <span style="color:#66d9ef">id</span>: black
+        ...
+    -   <span style="color:#66d9ef">id</span>: flake8
+        <span style="color:#66d9ef">name</span>: flake8
+        <span style="color:#66d9ef">entry</span>: poetry run flake8
+        <span style="color:#66d9ef">language</span>: system
+        <span style="color:#66d9ef">types</span>: [python]
+</code></pre></div><p>The checks run somewhat faster than the corresponding Nox sessions, for two
+reasons:</p>
+<ul>
+<li>They only run on files changed by the commit in question.</li>
+<li>They assume that the tools are already installed.</li>
+</ul>
+<h2 id="thanks-for-reading">Thanks for reading!</h2>
+<p>The next chapter is about adding type annotations and static type checking to
+your project. It will be published on January 22, 2020.</p>
+<p><figure class="centered"><a href="../hypermodern-python-04-typing">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/train.jpg"/> </a>
+</figure>
+
+<span class="centered"><a href="../hypermodern-python-04-typing">Continue to the next chapter</a></span></p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>The images in this chapter come from a series of futuristic pictures by
+Jean-Marc Côté and other artists issued in France in 1899, 1900, 1901 and
+1910 (source: <a href="https://commons.wikimedia.org/wiki/Category:France_in_XXI_Century_(fiction)">Wikimedia
+Commons</a>
+via <a href="https://publicdomainreview.org/collection/a-19th-century-vision-of-the-year-2000">The Public Domain
+Review</a>) <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-141256188-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

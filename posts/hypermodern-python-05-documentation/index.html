@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="author" content="Claudio Jolowicz">
+    <meta name="description" content="Claudio Jolowicz&#39;s website">
+    <meta name="keywords" content="blog,developer,personal">
+
+    <meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Hypermodern Python Chapter 5: Documentation"/>
+<meta name="twitter:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism."/>
+
+    <meta property="og:title" content="Hypermodern Python Chapter 5: Documentation" />
+<meta property="og:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://cjolowicz.github.io/posts/hypermodern-python-05-documentation/" />
+<meta property="article:published_time" content="2020-01-29T12:49:59+02:00" />
+<meta property="article:modified_time" content="2020-01-29T12:49:59+02:00" />
+
+
+    
+      <base href="https://cjolowicz.github.io/posts/hypermodern-python-05-documentation/">
+    
+    <title>
+  Hypermodern Python Chapter 5: Documentation · Claudio Jolowicz
+</title>
+
+    
+      <link rel="canonical" href="https://cjolowicz.github.io/posts/hypermodern-python-05-documentation/">
+    
+
+    <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.min.css" integrity="sha256-oSrCnRYXvHG31SBifqP2PM1uje7SJUyX0nTwO2RJV54=" crossorigin="anonymous" />
+
+    
+      
+      
+      <link rel="stylesheet" href="https://cjolowicz.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+    
+
+    
+
+    
+
+    
+
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-16x16.png" sizes="16x16">
+
+    <meta name="generator" content="Hugo 0.63.2" />
+  </head>
+
+  <body class=" ">
+    <main class="wrapper">
+      <nav class="navigation">
+  <section class="container">
+    <a class="navigation-title" href="https://cjolowicz.github.io/">
+      Claudio Jolowicz
+    </a>
+    <input type="checkbox" id="menu-toggle" />
+    <label class="menu-button float-right" for="menu-toggle"><i class="fas fa-bars"></i></label>
+    <ul class="navigation-list">
+      
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="https://cjolowicz.github.io/posts/">Blog</a>
+          </li>
+        
+          <li class="navigation-item">
+            <a class="navigation-link" href="http://claudiojolowicz.com/">Music</a>
+          </li>
+        
+      
+      
+    </ul>
+  </section>
+</nav>
+
+
+      <div class="content">
+        
+  <section class="container post">
+    <article>
+      <header>
+        <div class="post-title">
+          <h1 class="title">Hypermodern Python Chapter 5: Documentation</h1>
+        </div>
+        <div class="post-meta">
+          <div class="date">
+            <span class="posted-on">
+              <i class="fas fa-calendar"></i>
+              <time datetime='2020-01-29T12:49:59&#43;02:00'>
+                January 29, 2020
+              </time>
+            </span>
+            <span class="reading-time">
+              <i class="fas fa-clock"></i>
+              14 minutes read
+            </span>
+          </div>
+          
+          <div class="tags">
+  <i class="fas fa-tag"></i>
+    <a href="https://cjolowicz.github.io/tags/python/">python</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/nox/">nox</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/sphinx/">sphinx</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/flake8/">flake8</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/darglint/">darglint</a>
+      <span class="separator">•</span>
+    <a href="https://cjolowicz.github.io/tags/xdoctest/">xdoctest</a></div>
+
+        </div>
+      </header>
+
+      <div>
+        <p><a href="https://medium.com/@cjolowicz/hypermodern-python-5-documentation-13219991028c">Read this article on Medium</a></p>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida01.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida01.jpg"/> </a>
+</figure>
+
+<p>In this fifth installment of the Hypermodern Python series,
+I&rsquo;m going to discuss
+how to add documentation to your project.<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>
+In the <a href="../hypermodern-python-04-typing">previous chapter</a>, we discussed
+how to add type annotations and type checking.
+(If you start reading here,
+you can also
+<a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter04.zip">download the code</a>
+for the previous chapter.)</p>
+<p>Here are the topics covered in this chapter on documentation:</p>
+<ul>
+<li><a href="#documenting-code-with-python-docstrings">Documenting code with Python docstrings</a></li>
+<li><a href="#linting-code-documentation-with-flake8docstrings">Linting code documentation with flake8-docstrings</a></li>
+<li><a href="#adding-docstrings-to-nox-sessions">Adding docstrings to Nox sessions</a></li>
+<li><a href="#adding-docstrings-to-the-test-suite">Adding docstrings to the test suite</a></li>
+<li><a href="#validating-docstrings-against-function-signatures-with-darglint">Validating docstrings against function signatures with darglint</a></li>
+<li><a href="#running-documentation-examples-with-xdoctest">Running documentation examples with xdoctest</a></li>
+<li><a href="#creating-documentation-with-sphinx">Creating documentation with Sphinx</a></li>
+<li><a href="#writing-documentation-using-restructuredtext">Writing documentation using reStructuredText</a></li>
+<li><a href="#generating-api-documentation-with-autodoc">Generating API documentation with autodoc</a></li>
+</ul>
+<p>Here is a full list of the articles in this series:</p>
+<ul>
+<li><a href="../hypermodern-python-01-setup">Chapter 1: Setup</a></li>
+<li><a href="../hypermodern-python-02-testing">Chapter 2: Testing</a></li>
+<li><a href="../hypermodern-python-03-linting">Chapter 3: Linting</a></li>
+<li><a href="../hypermodern-python-04-typing">Chapter 4: Typing</a></li>
+<li><a href="../hypermodern-python-05-documentation">Chapter 5: Documentation</a> (this article)</li>
+<li><a href="../hypermodern-python-06-ci-cd">Chapter 6: CI/CD</a></li>
+</ul>
+<p>This guide has a companion repository:
+<a href="https://github.com/cjolowicz/hypermodern-python">cjolowicz/hypermodern-python</a>.
+Each article in the guide corresponds to a set of commits in the GitHub repository:</p>
+<ul>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/compare/chapter04...chapter05">View changes</a></li>
+<li><a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter05.zip">Download code</a></li>
+</ul>
+<h2 id="documenting-code-with-python-docstrings">Documenting code with Python docstrings</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida02.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida02.jpg"/> </a>
+</figure>
+
+<p><a href="https://www.python.org/dev/peps/pep-0257/#what-is-a-docstring">Documentation strings</a>,
+also known as <em>docstrings</em>,
+allow you to embed documentation directly into your code.
+An example of a docstring is the first line of <code>console.main</code>,
+used by Click to
+generate the usage message of your command-line interface:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/console.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>(language: str) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">The hypermodern Python project.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><p>Documentation strings communicate
+the purpose and usage of a module, class, or function
+to other developers reading your code.
+Unlike comments, the Python bytecode compiler does not throw them away,
+but adds them to the <code>__doc__</code> attribute of documented objects.
+This allows tools like <a href="http://www.sphinx-doc.org/">Sphinx</a>
+to generate API documentation from your code.</p>
+<p>You can document your entire package
+by adding a docstring to the top of <code>__init__.py</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/__init__.py</span>
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">The hypermodern Python project.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><p>Document the modules in your package by adding docstrings
+to the top of their respective source files.
+Here&rsquo;s one for the <code>console</code> module:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/console.py</span>
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Command-line interface.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><p>And here&rsquo;s a docstring for the <code>wikipedia</code> module:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Client for the Wikipedia REST API, version 1.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><p>So far we have used one-line docstrings.
+Docstrings can also consist of multiple lines.
+By convention, the first line is separated from the rest of the docstring by a blank line.
+This structures the docstring into a summary line and a more elaborate description.</p>
+<p>Docstring summaries can include useful information about
+class attributes, function parameters, return values, and other things.
+A common format for this with good readability and tooling support is the
+<a href="https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings">Google docstring style</a>.
+Other options are the
+<a href="https://sphinx-rtd-tutorial.readthedocs.io/en/latest/docstrings.html">Sphinx</a> and
+<a href="https://sphinxcontrib-napoleon.readthedocs.io/en/latest/example_numpy.html#example-numpy">NumPy</a>
+formats. In this chapter, we adopt the Google style.</p>
+<p>The following example shows a multi-line docstring for the <code>wikipedia.Page</code> class,
+describing the class attributes in Google style.
+Docstrings for classes are added to the first line of the class definition:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#a6e22e">@dataclass</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Page</span>:
+<span style="display:block;width:100%;background-color:#3c3d38">    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Page resource.</span><span style="color:#e6db74">
+</span></span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span></span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">    Attributes:</span><span style="color:#e6db74">
+</span></span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">        title: The title of the Wikipedia page.</span><span style="color:#e6db74">
+</span></span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">        extract: A plain text summary.</span><span style="color:#e6db74">
+</span></span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">    </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span><span style="display:block;width:100%;background-color:#3c3d38">
+</span>    title: str
+    extract: str
+</code></pre></div><p>Similarly, you can document functions by
+adding docstrings to the first line of the function body.
+Here is a multi-line docstring for the <code>wikipedia.random_page</code> function,
+describing the function parameters and return value,
+as well as exceptions raised by the function:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>(language: str <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">en</span><span style="color:#e6db74">&#34;</span>) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> Page:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Return a random page.</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">    Performs a GET request to the /page/random/summary endpoint.</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">    Args:</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        language: The Wikipedia language edition. By default, the English</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">            Wikipedia is used (</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">en</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">).</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">    Returns:</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        A page resource.</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">    Raises:</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        ClickException: The HTTP request failed or the HTTP response</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">            contained an invalid body.</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">    </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><h2 id="linting-code-documentation-with-flake8-docstrings">Linting code documentation with flake8-docstrings</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida03.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida03.jpg"/> </a>
+</figure>
+
+<p>The
+<a href="https://gitlab.com/pycqa/flake8-docstrings">flake8-docstrings</a>
+plugin uses the tool
+<a href="https://github.com/pycqa/pydocstyle">pydocstyle</a>
+to check that docstrings are compliant with the style recommendations of
+<a href="https://www.python.org/dev/peps/pep-0257/">PEP 257</a>.
+Warnings range from missing docstrings to
+issues with whitespace, quoting, and docstring content.</p>
+<p>Add the plugin to your development dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev flake8-docstrings
+</code></pre></div><p>Install the plugin into the linting session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    install_with_constraints(
+        session,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-annotations</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-bandit</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-black</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-bugbear</span><span style="color:#e6db74">&#34;</span>,
+<span style="display:block;width:100%;background-color:#3c3d38">        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-docstrings</span><span style="color:#e6db74">&#34;</span>,
+</span>        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-import-order</span><span style="color:#e6db74">&#34;</span>,
+    )
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>Configure Flake8 to enable the plugin warnings
+(<code>D</code> for docstring)
+and adopt the
+<a href="http://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings">Google docstring style</a>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#a6e22e">select</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">ANN,B,B9,BLK,C,D,E,F,I,S,W</span>
+<span style="color:#a6e22e">docstring-convention</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">google</span>
+</code></pre></div><p>Run <code>nox -rs lint</code> now,
+and the plugin will report missing docstrings.
+This is because
+the test suite and the Nox sessions are still undocumented.</p>
+<h2 id="adding-docstrings-to-nox-sessions">Adding docstrings to Nox sessions</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida04.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida04.jpg"/> </a>
+</figure>
+
+<p>Docstrings in Nox sessions make your <code>noxfile.py</code>
+a friendly, welcoming place for contributors
+(as well as for yourself a few months down the road).
+This is especially true since
+Nox shows them when you list the sessions using
+<a href="https://nox.thea.codes/en/stable/usage.html#listing-available-sessions">--list-sessions</a>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Nox sessions.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">install_with_constraints</span>(session: Session, <span style="color:#f92672">*</span>args: str, <span style="color:#f92672">*</span><span style="color:#f92672">*</span>kwargs: Any) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Install packages constrained by Poetry</span><span style="color:#e6db74">&#39;</span><span style="color:#e6db74">s lock file.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">black</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Run black code formatter.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Lint using flake8.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">safety</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Scan dependencies for insecure packages.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">mypy</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Type-check using mypy.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">pytype</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Type-check using pytype.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">tests</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Run the test suite.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">typeguard</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Runtime type checking using Typeguard.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><p>Nox now gives you a quick and informative overview
+of the developer tasks it automates:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ nox --list-sessions
+
+Sessions defined in …/hypermodern-python/noxfile.py:
+
+- black -&gt; Run black code formatter.
+* lint-3.8 -&gt; Lint using flake8.
+* lint-3.7 -&gt; Lint using flake8.
+* safety -&gt; Scan dependencies <span style="color:#66d9ef">for</span> insecure packages.
+* mypy-3.8 -&gt; Type-check using mypy.
+* mypy-3.7 -&gt; Type-check using mypy.
+* pytype -&gt; Type-check using pytype.
+* tests-3.8 -&gt; Run the test suite.
+* tests-3.7 -&gt; Run the test suite.
+- typeguard-3.8 -&gt; Runtime type checking using Typeguard.
+- typeguard-3.7 -&gt; Runtime type checking using Typeguard.
+
+sessions marked with * are selected, sessions marked with - are skipped.
+</code></pre></div><h2 id="adding-docstrings-to-the-test-suite">Adding docstrings to the test suite</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida05.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida05.jpg"/> </a>
+</figure>
+
+<p>Docstrings for test cases
+are a great way to
+improve the readability of your test suite.
+They help you keep test function names succinct without becoming obscure,
+and they can be used to <a href="https://github.com/gowtham-sai/pytest-pspec">make test output more friendly</a>.</p>
+<p>Here are three useful guidelines about documenting test cases:</p>
+<ol>
+<li>State the expected behaviour and be specific about it.</li>
+<li>Omit everything that already follows from the fact that it is a test case.
+For example, avoid words like &ldquo;test if&rdquo;, &ldquo;correctly&rdquo;, &ldquo;should&rdquo;.</li>
+<li>Use &ldquo;it&rdquo; to refer to the <a href="http://xunitpatterns.com/SUT.html">system under test</a>.
+There is no need to repeatedly name the function or class you are testing.
+(A better place for that is the docstring of the test module,
+or the test class if you use those.)</li>
+</ol>
+<p>The following example demonstrates
+how you can write a docstring for a test case:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># tests/test_console.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test_main_succeeds</span>(runner: CliRunner, mock_requests_get: Mock) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">It exits with a status code of zero.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><p>I will not repeat all the docstrings for the test suite in this section.
+You can take a look at the specific changes in the
+<a href="https://github.com/cjolowicz/hypermodern-python/compare/chapter04...chapter05">companion repository</a>
+if you are interested.</p>
+<h2 id="validating-docstrings-against-function-signatures-with-darglint">Validating docstrings against function signatures with darglint</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida06.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida06.jpg"/> </a>
+</figure>
+
+<p>Documentation has a nasty habit of getting out of step with a codebase.
+Embedding it in the codebase mitigates this problem,
+and that is part of what makes docstrings so useful:
+They sit right next to what they describe,
+so they&rsquo;re easy to keep in sync.</p>
+<p>Alas, docstrings too are subject to that mysterious force
+driving code and documentation apart.
+The good news is that &ndash;
+by following a docstring convention like Google style &ndash;
+you make it possible for tools to detect this drift.</p>
+<p><a href="https://github.com/terrencepreilly/darglint">Darglint</a>
+checks that docstring descriptions match function definitions,
+and integrates with Flake8 as a plugin.
+For example, imagine
+you renamed the <code>language</code> parameter of <code>wikipedia.random_page</code> to <code>lang</code>
+but forgot to update the docstring.
+Darglint would notice and remind you with the following warnings:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python">wikipedia<span style="color:#f92672">.</span>py:<span style="color:#ae81ff">37</span>:<span style="color:#ae81ff">1</span>: DAR101 Missing parameter(s) <span style="color:#f92672">in</span> Docstring: <span style="color:#f92672">-</span> lang
+wikipedia<span style="color:#f92672">.</span>py:<span style="color:#ae81ff">38</span>:<span style="color:#ae81ff">1</span>: DAR102 Excess parameter(s) <span style="color:#f92672">in</span> Docstring: <span style="color:#f92672">+</span> language
+</code></pre></div><p>Add Darglint to your development dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev darglint
+</code></pre></div><p>Install the tool into the linting session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">lint</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Lint using flake8.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> locations
+    install_with_constraints(
+        session,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-annotations</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-bandit</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-black</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-bugbear</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-docstrings</span><span style="color:#e6db74">&#34;</span>,
+        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8-import-order</span><span style="color:#e6db74">&#34;</span>,
+<span style="display:block;width:100%;background-color:#3c3d38">        <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">darglint</span><span style="color:#e6db74">&#34;</span>,
+</span>    )
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">flake8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>Unlike other plugins,
+darglint enables most of its warnings by default.
+For consistency and to future-proof your Flake8 configuration,
+enable the plugin warnings explicitly
+(<code>DAR</code> like <em>darglint</em>):</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .flake8</span>
+<span style="color:#66d9ef">[flake8]</span>
+<span style="color:#a6e22e">select</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">ANN,B,B9,BLK,C,D,DAR,E,F,I,S,W</span>
+</code></pre></div><p>By default, Darglint requires every docstring to
+completely specify parameters, return value, and exceptions.
+In some cases, this is not desirable.
+For example,
+documenting the parameters of test functions or Nox sessions
+would mostly create redundancy.
+Configure darglint to accept one-line docstrings,
+using the <code>.darglint</code> configuration file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#75715e"># .darglint</span>
+<span style="color:#66d9ef">[darglint]</span>
+<span style="color:#a6e22e">strictness</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">short</span>
+</code></pre></div><h2 id="running-documentation-examples-with-xdoctest">Running documentation examples with xdoctest</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida07.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida07.jpg"/> </a>
+</figure>
+
+<p>A good way to explain how to use your function or module is to
+include an example in its docstring.
+Good examples can substitute for long explanations,
+and humans are great at learning from examples.</p>
+<p>By convention, docstring examples are written as if entered at a Python prompt.
+Below is an example (pun intended) from the documentation of <code>wikipedia.random_page</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># src/hypermodern_python/wikipedia.py</span>
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">random_page</span>(language: str <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">en</span><span style="color:#e6db74">&#34;</span>) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> Page:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Return a random page.</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">    Performs a GET request to the /page/random/summary endpoint.</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">    Args:</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        language: The Wikipedia language edition. By default, the English</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">            Wikipedia is used (</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">en</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">).</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">    Returns:</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        A page resource.</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">    Raises:</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">        ClickException: The HTTP request failed or the HTTP response</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">            contained an invalid body.</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span><span style="color:#e6db74">
+</span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">    Example:</span><span style="color:#e6db74">
+</span></span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">        &gt;&gt;&gt; from hypermodern_python import wikipedia</span><span style="color:#e6db74">
+</span></span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">        &gt;&gt;&gt; page = wikipedia.random_page(language=</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">en</span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">)</span><span style="color:#e6db74">
+</span></span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">        &gt;&gt;&gt; bool(page.title)</span><span style="color:#e6db74">
+</span></span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#e6db74"></span><span style="color:#e6db74">        True</span><span style="color:#e6db74">
+</span></span><span style="color:#e6db74"></span><span style="color:#e6db74">    </span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</code></pre></div><p>You may wonder why the example converts the page title to <code>bool</code>
+before printing it to the console.
+Admittedly, this makes the example less expressive,
+but on the upside, the example becomes reproducible.
+After all, it is impossible to know in advance which data the function returns.
+Why would you want the example to be reproducible?
+Because this makes it possible to run the example as a <em>test</em>.</p>
+<p>The <a href="https://github.com/Erotemic/xdoctest">xdoctest</a> package
+runs the examples in your docstrings and
+compares the actual output to the expected output as per the docstring.
+This serves multiple purposes:</p>
+<ul>
+<li>The example is checked for correctness.</li>
+<li>You ensure that the documentation is up-to-date.</li>
+<li>Your codebase gets additional test coverage for free.</li>
+</ul>
+<p>Add the tool to your developer dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev xdoctest
+</code></pre></div><p>Add the following Nox session to install and run Xdoctest.
+The session also installs your package,
+because both the tool itself
+and your examples need to be able to import it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span>[<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.7</span><span style="color:#e6db74">&#34;</span>])
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">xdoctest</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Run examples with xdoctest.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+    args <span style="color:#f92672">=</span> session<span style="color:#f92672">.</span>posargs <span style="color:#f92672">or</span> [<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">all</span><span style="color:#e6db74">&#34;</span>]
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">install</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--no-dev</span><span style="color:#e6db74">&#34;</span>, external<span style="color:#f92672">=</span>True)
+    install_with_constraints(session, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">xdoctest</span><span style="color:#e6db74">&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">python</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">-m</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">xdoctest</span><span style="color:#e6db74">&#34;</span>, package, <span style="color:#f92672">*</span>args)
+</code></pre></div><p>By default, the Nox session uses the <code>all</code> subcommand to run all examples.
+You can also list the examples using the <code>list</code> subcommand,
+or run specific examples:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs xdoctest -- random_page
+</code></pre></div><p>Xdoctest integrates with Pytest as a plugin,
+so you could also install the tool into your existing Nox session for Pytest,
+and enable it via the <code>--xdoctest</code> option.
+We are using it in stand-alone mode here,
+which has the advantage of keeping unit tests and doctest separate.</p>
+<h2 id="creating-documentation-with-sphinx">Creating documentation with Sphinx</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida08.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida08.jpg"/> </a>
+</figure>
+
+<p><a href="http://www.sphinx-doc.org/">Sphinx</a>
+is the documentation tool used by the
+official Python documentation and many open-source projects.
+Add Sphinx to your development dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev sphinx
+</code></pre></div><p>Create a directory <code>docs</code>.
+The master document is located in the file <code>docs/index.rst</code>.
+Let&rsquo;s start with a simple placeholder text:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">This is docs/index.rst,<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>documenting the Hypermodern Python project.<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Create the Sphinx configuration file <code>docs/conf.py</code>.
+This provides meta information about your project:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># docs/conf.py</span>
+<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Sphinx configuration.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+project <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">hypermodern-python</span><span style="color:#e6db74">&#34;</span>
+author <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Your Name</span><span style="color:#e6db74">&#34;</span>
+copyright <span style="color:#f92672">=</span> f<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">2020, {author}</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>Add a Nox session to build the documentation:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">docs</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Build the documentation.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+    install_with_constraints(session, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sphinx</span><span style="color:#e6db74">&#34;</span>)
+    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sphinx-build</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">docs</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">docs/_build</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>For good measure, include <code>docs/conf.py</code> in the linting session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+locations <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">src</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">tests</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">noxfile.py</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">docs/conf.py</span><span style="color:#e6db74">&#34;</span>
+</code></pre></div><p>Run the Nox session:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs docs
+</code></pre></div><p>You can now open the file <code>docs/_build/index.html</code> in your browser
+to view your documentation offline.</p>
+<h2 id="writing-documentation-using-restructuredtext">Writing documentation using reStructuredText</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida09.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida09.jpg"/> </a>
+</figure>
+
+<p>Sphinx documentation is commonly written using
+<a href="http://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html">reStructuredText</a>
+(reST),
+although Markdown is also supported.
+reStructuredText may not be as lightweight as Markdown,
+but its expressiveness and extensibility, among other reasons, make it
+<a href="https://www.ericholscher.com/blog/2016/mar/15/dont-use-markdown-for-technical-docs/">more suitable</a>
+for writing technical documentation.</p>
+<p>Open the file <code>docs/index.rst</code>,
+and replace the placeholder text with the following document:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">The Hypermodern Python Project
+==============================
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>The example project for the<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#e6db74">`Hypermodern Python </span><span style="color:#e6db74">&lt;https://medium.com/@cjolowicz/hypermodern-python-d44485d9d769&gt;</span><span style="color:#e6db74">`_</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>article series.<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>The command-line interface prints random facts to your console,<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>using the <span style="color:#e6db74">`Wikipedia API </span><span style="color:#e6db74">&lt;https://en.wikipedia.org/api/rest_v1/#/&gt;</span><span style="color:#e6db74">`_</span>.<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>Installation
+------------
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>To install the Hypermodern Python project,<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>run this command in your terminal:<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">code-block</span>:: <span style="color:#66d9ef">console</span>
+
+<span style="color:#e6db74">   $ pip install hypermodern-python
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span>Usage
+-----
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>Hypermodern Python&#39;s usage looks like:<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">code-block</span>:: <span style="color:#66d9ef">console</span>
+
+<span style="color:#e6db74">   $ hypermodern-python [OPTIONS]
+</span><span style="color:#e6db74">
+</span><span style="color:#e6db74"></span>.. <span style="color:#f92672">option</span>:: -l &lt;language&gt;, --language &lt;language&gt;<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   The Wikipedia language edition,<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   as identified by its subdomain on<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#e6db74">`wikipedia.org </span><span style="color:#e6db74">&lt;https://www.wikipedia.org/&gt;</span><span style="color:#e6db74">`_</span>.<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   By default, the English Wikipedia is selected.<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">option</span>:: --version<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   Display the version and exit.<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">option</span>:: --help<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   Display a short usage message and exit.<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>The Sphinx documentation contains a
+<a href="http://www.sphinx-doc.org/en/master/usage/restructuredtext/index.html">good introduction</a>
+to reStructuredText,
+so I&rsquo;ll limit myself to explaining the constructs used above.</p>
+<p>Headings are created by underlining with a punctuation character:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">Usage
+-----
+</code></pre></div><p>Links use this syntax:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst"><span style="color:#e6db74">`Display text </span><span style="color:#e6db74">&lt;URL&gt;</span><span style="color:#e6db74">`_</span><span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Code blocks are marked up by the
+<a href="http://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-code-block">code-block</a>
+directive:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">.. <span style="color:#f92672">code-block</span>:: python<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   print(&#34;Hello world&#34;)<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Command-line options are marked up by the
+<a href="https://www.sphinx-doc.org/en/master/usage/restructuredtext/domains.html#directive-option">option</a>
+directive:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">.. <span style="color:#f92672">option</span>:: --help<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   Display a short usage message and exit.<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Indentation is significant, like in Python.
+Three spaces are customary,
+because they line up directives with their content.</p>
+<p>Paragraphs are separated by a blank line.
+Newlines by themselves are just whitespace,
+and you can turn this to your advantage by treating them as
+<a href="https://rhodesmill.org/brandon/2012/one-sentence-per-line/">semantic linefeeds</a>:
+Use newlines to demarcate <em>ideas</em>.
+Text editors are great at manipulating lines,
+and version control will also benefit from the smaller diffs.</p>
+<p>Here is a paragraph filled to a line length of 79 characters:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">The Wikipedia language edition, as identified by its subdomain on `wikipedia.org<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#f92672">&lt;https://www.wikipedia.org/&gt;</span>`_. By default, the English Wikipedia is selected.<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Here is the same paragraph using semantic linefeeds:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">The Wikipedia language edition,<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>as identified by its subdomain on<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#e6db74">`wikipedia.org </span><span style="color:#e6db74">&lt;https://www.wikipedia.org/&gt;</span><span style="color:#e6db74">`_</span>.<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>By default, the English Wikipedia is selected.<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Directives like <code>code-block</code> are Sphinx extensions,
+but unlike the fenced code blocks of <a href="https://github.github.com/gfm/">GitHub Flavored Markdown</a>,
+they use a standard extension mechanism built into the base language.
+While reStructuredText provides some directives of its own,
+Sphinx defines <a href="http://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html">many more</a>,
+creating an expressive semantic markup language that
+lets you focus on meaning instead of formatting.</p>
+<p>Sphinx documentation can be spread over multiple interconnected files.
+Let&rsquo;s see how this works by including the license in the documentation.
+Create a file <code>docs/license.rst</code>,
+which includes the <code>LICENSE</code> file from the parent directory
+using an
+<a href="https://docutils.sourceforge.io/docs/ref/rst/directives.html#include">include</a>
+directive:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">License
+=======
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">include</span>:: ../LICENSE<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>Add the license to the navigation sidebar
+by adding a
+<a href="http://www.sphinx-doc.org/en/master/usage/restructuredtext/directives.html#directive-toctree">toctree</a>
+directive
+to the main document in <code>docs/index.rst</code>.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">The Hypermodern Python Project
+==============================
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">toctree</span>::<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">:hidden:</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">:maxdepth:</span> <span style="color:#a6e22e">1</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   license<span style="color:#960050;background-color:#1e0010">
+</span></code></pre></div><p>The <code>:hidden:</code> option
+prevents the table of contents from being inserted into the main document itself,
+which makes sense since it is already included in the sidebar.
+The <code>:maxdepth: 1</code> option
+turns the navigation sidebar into a flat list,
+instead of a nested hierarchy
+including the internal structure of each documentation page.</p>
+<p>Build the documentation from Nox.
+After reloading the page in your browser,
+you should see the license in the navigation sidebar.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs docs
+</code></pre></div><h2 id="generating-api-documentation-with-autodoc">Generating API documentation with autodoc</h2>
+<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-05/robida10.jpg">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/robida10.jpg"/> </a>
+</figure>
+
+<p>In this final section,
+we use Sphinx to generate API documentation
+from the documentation strings and type annotations in the package,
+using three Sphinx extensions:</p>
+<ul>
+<li><a href="https://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html">autodoc</a>
+enables Sphinx to generate API documentation
+from the docstrings in your package.</li>
+<li><a href="https://www.sphinx-doc.org/en/master/usage/extensions/napoleon.html">napoleon</a>
+pre-processes Google-style docstrings to reStructuredText.</li>
+<li><a href="https://github.com/agronholm/sphinx-autodoc-typehints">sphinx-autodoc-typehints</a>
+uses type annotations to
+document the types of function parameters and return values.</li>
+</ul>
+<p>The autodoc and napoleon extensions are distributed with Sphinx,
+so there is no need to install them explicitly.</p>
+<p>Add <code>sphinx-autodoc-typehints</code> to your development dependencies:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry add --dev sphinx-autodoc-typehints
+</code></pre></div><p>Install the extension and your own package into the Nox session.
+Your package is needed so Sphinx can
+read its documentation strings and type annotations.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># noxfile.py</span>
+<span style="color:#a6e22e">@nox.session</span>(python<span style="color:#f92672">=</span><span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">3.8</span><span style="color:#e6db74">&#34;</span>)
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">docs</span>(session: Session) <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> None:
+    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;&#34;&#34;</span><span style="color:#e6db74">Build the documentation.</span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+<span style="display:block;width:100%;background-color:#3c3d38">    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">poetry</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">install</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">--no-dev</span><span style="color:#e6db74">&#34;</span>, external<span style="color:#f92672">=</span>True)
+</span><span style="display:block;width:100%;background-color:#3c3d38">    install_with_constraints(session, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sphinx</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sphinx-autodoc-typehints</span><span style="color:#e6db74">&#34;</span>)
+</span>    session<span style="color:#f92672">.</span>run(<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sphinx-build</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">docs</span><span style="color:#e6db74">&#34;</span>, <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">docs/_build</span><span style="color:#e6db74">&#34;</span>)
+</code></pre></div><p>Activate the extensions by declaring them in the Sphinx configuration file:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e"># docs/conf.py</span>
+project <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">hypermodern-python</span><span style="color:#e6db74">&#34;</span>
+author <span style="color:#f92672">=</span> <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">Your Name</span><span style="color:#e6db74">&#34;</span>
+copyright <span style="color:#f92672">=</span> f<span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">2020, {author}</span><span style="color:#e6db74">&#34;</span>
+<span style="display:block;width:100%;background-color:#3c3d38">extensions <span style="color:#f92672">=</span> [
+</span><span style="display:block;width:100%;background-color:#3c3d38">    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sphinx.ext.autodoc</span><span style="color:#e6db74">&#34;</span>,
+</span><span style="display:block;width:100%;background-color:#3c3d38">    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sphinx.ext.napoleon</span><span style="color:#e6db74">&#34;</span>,
+</span><span style="display:block;width:100%;background-color:#3c3d38">    <span style="color:#e6db74"></span><span style="color:#e6db74">&#34;</span><span style="color:#e6db74">sphinx_autodoc_typehints</span><span style="color:#e6db74">&#34;</span>,
+</span><span style="display:block;width:100%;background-color:#3c3d38">]
+</span></code></pre></div><p>You can now reference docstrings in your Sphinx documentation
+using directives such as
+<a href="http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#directive-automodule">automodule</a>,
+<a href="http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#directive-autoclass">autoclass</a>, and
+<a href="http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#directive-autofunction">autofunction</a>.</p>
+<p>Create the file <code>docs/reference.rst</code>,
+containing the API reference for the project:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">Reference
+=========
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">contents</span>::<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">:local:</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#a6e22e">:backlinks:</span> <span style="color:#a6e22e">none</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>hypermodern_python.console
+--------------------------
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">automodule</span>:: hypermodern_python.console<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">:members:</span>
+
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>hypermodern_python.wikipedia
+----------------------------
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">automodule</span>:: hypermodern_python.wikipedia<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">:members:</span>
+</code></pre></div><p>The
+<a href="http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#directive-automodule">automodule</a>
+directive inserts the documentation for the specified Python module.
+With the <code>:members:</code> option,
+it also includes documentation for
+the classes and functions defined by the module.</p>
+<p>The
+<a href="https://docutils.sourceforge.io/docs/ref/rst/directives.html#table-of-contents">contents</a>
+directive inserts a table of content into the document.
+The <code>:local:</code> option avoids including the page title in the table of contents.
+The <code>:backlinks: none</code> option avoids linking each section title to the table of contents.</p>
+<p>Include the new file in the navigation sidebar,
+by updating the <code>toctree</code> directive at the top of <code>docs/index.rst</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-rst" data-lang="rst">The Hypermodern Python Project
+==============================
+<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>.. <span style="color:#f92672">toctree</span>::<span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">:hidden:</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   <span style="color:#a6e22e">:maxdepth:</span> <span style="color:#a6e22e">1</span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#960050;background-color:#1e0010">
+</span><span style="color:#960050;background-color:#1e0010"></span>   license<span style="color:#960050;background-color:#1e0010">
+</span><span style="display:block;width:100%;background-color:#3c3d38"><span style="color:#960050;background-color:#1e0010"></span>   reference<span style="color:#960050;background-color:#1e0010">
+</span></span></code></pre></div><p>Rebuild the documentation from Nox,
+and refresh your browser tab.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">nox -rs docs
+</code></pre></div><p>Navigate to the <em>Reference</em> page and
+you should be able to view the generated API documentation.</p>
+<h2 id="thanks-for-reading">Thanks for reading!</h2>
+<p>The next chapter is about Continuous Integration and Delivery.</p>
+<p><figure class="centered"><a href="../hypermodern-python-06-ci-cd">
+    <img src="https://cjolowicz.github.io/images/hypermodern-python-05/trolley.jpg"/> </a>
+</figure>
+
+<span class="centered"><a href="../hypermodern-python-06-ci-cd">Continue to the next chapter</a></span></p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p>The images in this chapter are details from
+the photogravures
+<em>Paris la nuit</em>
+(Paris by night) and
+<em>Départ d&rsquo;un ballon transatlantique</em>
+(Departure of a transatlantic balloon), and
+the wood engravings
+<em>Station centrale des aéronefs à Notre-Dame</em>
+(Central aircraft station at Notre-Dame) and
+<em>Maison tournante aérienne</em>
+(Aerial rotating house),
+by Albert Robida, 1883
+(via <a href="https://www.oldbookillustrations.com/writers/robida-albert/">Old Book Illustrations</a>). <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+
+      </div>
+
+      <footer>
+        
+
+
+        
+      </footer>
+    </article>
+
+    
+  </section>
+
+      </div>
+
+      <footer class="footer">
+  <section class="container">
+    
+    
+    
+    
+  </section>
+</footer>
+
+    </main>
+
+    
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+	ga('create', 'UA-141256188-1', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+
+
+  </body>
+
+</html>

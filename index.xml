@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Claudio Jolowicz</title>
+    <link>https://cjolowicz.github.io/</link>
+    <description>Recent content on Claudio Jolowicz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 05 Feb 2020 17:41:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://cjolowicz.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hypermodern Python Chapter 6: CI/CD</title>
+      <link>https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/</link>
+      <pubDate>Wed, 05 Feb 2020 17:41:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/</guid>
+      <description>Read this article on Medium
+  In this sixth and last installment of the Hypermodern Python series, I&amp;rsquo;m going to discuss how to add continuous integration and delivery to your project using GitHub Actions, Poetry, and Nox.1 In the previous chapter, we discussed how to add documentation. (If you start reading here, you can also download the code for the previous chapter.)
+Here are the topics covered in this chapter on Continuous Integration and Delivery:</description>
+    </item>
+    
+    <item>
+      <title>Hypermodern Python Chapter 5: Documentation</title>
+      <link>https://cjolowicz.github.io/posts/hypermodern-python-05-documentation/</link>
+      <pubDate>Wed, 29 Jan 2020 12:49:59 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hypermodern-python-05-documentation/</guid>
+      <description>Read this article on Medium
+  In this fifth installment of the Hypermodern Python series, I&amp;rsquo;m going to discuss how to add documentation to your project.1 In the previous chapter, we discussed how to add type annotations and type checking. (If you start reading here, you can also download the code for the previous chapter.)
+Here are the topics covered in this chapter on documentation:
+ Documenting code with Python docstrings Linting code documentation with flake8-docstrings Adding docstrings to Nox sessions Adding docstrings to the test suite Validating docstrings against function signatures with darglint Running documentation examples with xdoctest Creating documentation with Sphinx Writing documentation using reStructuredText Generating API documentation with autodoc  Here is a full list of the articles in this series:</description>
+    </item>
+    
+    <item>
+      <title>Hypermodern Python Chapter 4: Typing</title>
+      <link>https://cjolowicz.github.io/posts/hypermodern-python-04-typing/</link>
+      <pubDate>Wed, 22 Jan 2020 10:04:00 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hypermodern-python-04-typing/</guid>
+      <description>Read this article on Medium
+  In this fourth installment of the Hypermodern Python series, I&amp;rsquo;m going to discuss how to add type annotations and type checking to your project.1 Previously, we discussed how to add linting, static analysis, and code formatting. (If you start reading here, you can also download the code for the previous chapter.)
+Here are the topics covered in this chapter on Typing in Python:</description>
+    </item>
+    
+    <item>
+      <title>Hypermodern Python Chapter 3: Linting</title>
+      <link>https://cjolowicz.github.io/posts/hypermodern-python-03-linting/</link>
+      <pubDate>Wed, 15 Jan 2020 07:04:32 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hypermodern-python-03-linting/</guid>
+      <description>Read this article on Medium
+  In this third installment of the Hypermodern Python series, I&amp;rsquo;m going to discuss how to add linting, code formatting, and static analysis to your project.1 Previously, we discussed Automated Testing. (If you start reading here, you can also download the code for the previous chapter.)
+Here are the topics covered in this chapter on Linting in Python:
+ Linting with Flake8 Code formatting with Black Checking imports with flake8-import-order Finding more bugs with flake8-bugbear Identifying security issues with Bandit Finding security vulnerabilities in dependencies with Safety Managing dependencies in Nox sessions with Poetry Managing Git hooks with pre-commit  Here is a full list of the articles in this series:</description>
+    </item>
+    
+    <item>
+      <title>Hypermodern Python Chapter 2: Testing</title>
+      <link>https://cjolowicz.github.io/posts/hypermodern-python-02-testing/</link>
+      <pubDate>Wed, 08 Jan 2020 06:28:21 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hypermodern-python-02-testing/</guid>
+      <description>Read this article on Medium
+  In this second installment of the Hypermodern Python series, I&amp;rsquo;m going to discuss how to add automated testing to your project, and how to teach the random fact generator foreign languages.1 Previously, we discussed How to set up a Python project. (If you start reading here, you can also download the code for the previous chapter.)
+Here are the topics covered in this chapter on Testing in Python:</description>
+    </item>
+    
+    <item>
+      <title>Hypermodern Python</title>
+      <link>https://cjolowicz.github.io/posts/hypermodern-python-01-setup/</link>
+      <pubDate>Wed, 01 Jan 2020 08:00:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hypermodern-python-01-setup/</guid>
+      <description>Read this article on Medium
+  New Year 2020 marks the end of more than a decade of coexistence of Python 2 and 3. The Python landscape has changed considerably over this period: a host of new tools and best practices now improve the Python developer experience. Their adoption, however, lags behind due to the constraints of legacy support.
+This article series is a guide to modern Python tooling with a focus on simplicity and minimalism.</description>
+    </item>
+    
+    <item>
+      <title>Incremental Docker builds for monolithic codebases</title>
+      <link>https://cjolowicz.github.io/posts/incremental-docker-builds-for-monolithic-codebases/</link>
+      <pubDate>Thu, 23 May 2019 09:08:59 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/incremental-docker-builds-for-monolithic-codebases/</guid>
+      <description>As a developer working on a monolithic codebase, how can you use Docker to build and deploy the projects contained in it? If you take the naive approach, you quickly run into problems with bloated images and frequent rebuilds of the entire source tree.
+In this post, I show you how to build images from monorepos incrementally, reusing previous builds beyond the Docker build cache. The solution I describe avoids code duplication, reduces image size, and speeds up builds dramatically.</description>
+    </item>
+    
+    <item>
+      <title>Hosting a Hugo blog on GitHub Pages with Travis CI</title>
+      <link>https://cjolowicz.github.io/posts/hosting-a-hugo-blog-on-github-pages-with-travis-ci/</link>
+      <pubDate>Sat, 27 Apr 2019 10:48:29 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hosting-a-hugo-blog-on-github-pages-with-travis-ci/</guid>
+      <description>This post describes how to set up a blog using Hugo, an open-source static site generator. The blog is hosted on GitHub Pages, a web hosting service offered by GitHub. The Travis CI continuous integration service is used to deploy changes to the blog.
+ This post is based on Artem Sidorenko&amp;rsquo;s article Hugo on GitHub Pages with Travis CI.
+ Contents
+ Overview Installing Hugo Setting up the blog repository Setting up the github.</description>
+    </item>
+    
+  </channel>
+</rss>

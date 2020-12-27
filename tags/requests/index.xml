@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>requests on Claudio Jolowicz</title>
+    <link>https://cjolowicz.github.io/tags/requests/</link>
+    <description>Recent content in requests on Claudio Jolowicz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 01 Jan 2020 08:00:00 +0200</lastBuildDate>
+    
+	<atom:link href="https://cjolowicz.github.io/tags/requests/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hypermodern Python</title>
+      <link>https://cjolowicz.github.io/posts/hypermodern-python-01-setup/</link>
+      <pubDate>Wed, 01 Jan 2020 08:00:00 +0200</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hypermodern-python-01-setup/</guid>
+      <description>Read this article on Medium
+  New Year 2020 marks the end of more than a decade of coexistence of Python 2 and 3. The Python landscape has changed considerably over this period: a host of new tools and best practices now improve the Python developer experience. Their adoption, however, lags behind due to the constraints of legacy support.
+This article series is a guide to modern Python tooling with a focus on simplicity and minimalism.</description>
+    </item>
+    
+  </channel>
+</rss>

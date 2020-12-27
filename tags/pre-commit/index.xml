@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>pre-commit on Claudio Jolowicz</title>
+    <link>https://cjolowicz.github.io/tags/pre-commit/</link>
+    <description>Recent content in pre-commit on Claudio Jolowicz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Wed, 15 Jan 2020 07:04:32 +0100</lastBuildDate>
+    
+	<atom:link href="https://cjolowicz.github.io/tags/pre-commit/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Hypermodern Python Chapter 3: Linting</title>
+      <link>https://cjolowicz.github.io/posts/hypermodern-python-03-linting/</link>
+      <pubDate>Wed, 15 Jan 2020 07:04:32 +0100</pubDate>
+      
+      <guid>https://cjolowicz.github.io/posts/hypermodern-python-03-linting/</guid>
+      <description>Read this article on Medium
+  In this third installment of the Hypermodern Python series, I&amp;rsquo;m going to discuss how to add linting, code formatting, and static analysis to your project.1 Previously, we discussed Automated Testing. (If you start reading here, you can also download the code for the previous chapter.)
+Here are the topics covered in this chapter on Linting in Python:
+ Linting with Flake8 Code formatting with Black Checking imports with flake8-import-order Finding more bugs with flake8-bugbear Identifying security issues with Bandit Finding security vulnerabilities in dependencies with Safety Managing dependencies in Nox sessions with Poetry Managing Git hooks with pre-commit  Here is a full list of the articles in this series:</description>
+    </item>
+    
+  </channel>
+</rss>
