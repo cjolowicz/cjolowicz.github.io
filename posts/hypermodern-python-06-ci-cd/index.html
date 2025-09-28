@@ -16,20 +16,20 @@
     <meta property="og:title" content="Hypermodern Python Chapter 6: CI/CD" />
 <meta property="og:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/" />
+<meta property="og:url" content="https://blog.claudiojolowicz.com/posts/hypermodern-python-06-ci-cd/" />
 <meta property="article:published_time" content="2020-02-05T17:41:00+02:00" />
 <meta property="article:modified_time" content="2020-02-05T17:41:00+02:00" />
 
 
     
-      <base href="https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/">
+      <base href="https://blog.claudiojolowicz.com/posts/hypermodern-python-06-ci-cd/">
     
     <title>
   Hypermodern Python Chapter 6: CI/CD · Claudio Jolowicz
 </title>
 
     
-      <link rel="canonical" href="https://cjolowicz.github.io/posts/hypermodern-python-06-ci-cd/">
+      <link rel="canonical" href="https://blog.claudiojolowicz.com/posts/hypermodern-python-06-ci-cd/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -39,7 +39,7 @@
     
       
       
-      <link rel="stylesheet" href="https://cjolowicz.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://blog.claudiojolowicz.com/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -48,8 +48,8 @@
 
     
 
-    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://blog.claudiojolowicz.com/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://blog.claudiojolowicz.com/images/favicon-16x16.png" sizes="16x16">
 
     <meta name="generator" content="Hugo 0.63.2" />
   </head>
@@ -58,7 +58,7 @@
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="https://cjolowicz.github.io/">
+    <a class="navigation-title" href="https://blog.claudiojolowicz.com/">
       Claudio Jolowicz
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -67,7 +67,7 @@
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="https://cjolowicz.github.io/posts/">Blog</a>
+            <a class="navigation-link" href="https://blog.claudiojolowicz.com/posts/">Blog</a>
           </li>
         
           <li class="navigation-item">
@@ -85,7 +85,7 @@
         
   <section class="container post">
     <article>
-      <div><figure class="centered"><a href="https://a.co/d/05CDPKk5"><img src="https://cjolowicz.github.io/images/now-available-slim.png" alt="Pre-order “Hypermodern Python Tooling” (O’Reilly, 2024)" /></a></figure></div>
+      <div><figure class="centered"><a href="https://a.co/d/05CDPKk5"><img src="https://blog.claudiojolowicz.com/images/now-available-slim.png" alt="Pre-order “Hypermodern Python Tooling” (O’Reilly, 2024)" /></a></figure></div>
       <header>
         <div class="post-title">
           <h1 class="title">Hypermodern Python Chapter 6: CI/CD</h1>
@@ -106,28 +106,28 @@
           
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="https://cjolowicz.github.io/tags/python/">Python</a>
+    <a href="https://blog.claudiojolowicz.com/tags/python/">Python</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/github-actions/">GitHub Actions</a>
+    <a href="https://blog.claudiojolowicz.com/tags/github-actions/">GitHub Actions</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/codecov/">Codecov</a>
+    <a href="https://blog.claudiojolowicz.com/tags/codecov/">Codecov</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/pypi/">PyPI</a>
+    <a href="https://blog.claudiojolowicz.com/tags/pypi/">PyPI</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/testpypi/">TestPyPI</a>
+    <a href="https://blog.claudiojolowicz.com/tags/testpypi/">TestPyPI</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/read-the-docs/">Read the Docs</a>
+    <a href="https://blog.claudiojolowicz.com/tags/read-the-docs/">Read the Docs</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/poetry/">Poetry</a>
+    <a href="https://blog.claudiojolowicz.com/tags/poetry/">Poetry</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/nox/">Nox</a></div>
+    <a href="https://blog.claudiojolowicz.com/tags/nox/">Nox</a></div>
 
         </div>
       </header>
 
       <div>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa01.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa01.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa01.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa01.jpg"/> </a>
 </figure>
         <p><a href="https://medium.com/@cjolowicz/hypermodern-python-6-ci-cd-b233accfa2f6">Read this article on Medium</a></p>
 
@@ -170,8 +170,8 @@ Each article in the guide corresponds to a set of commits in the GitHub reposito
 <li><a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter06.zip">Download code</a></li>
 </ul>
 <h2 id="continuous-integration-using-github-actions">Continuous integration using GitHub Actions</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa02.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa02.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa02.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa02.jpg"/> </a>
 </figure>
 
 <p><em>Continuous integration</em> (CI) helps you
@@ -304,8 +304,8 @@ It looks like this:</p>
 <p>Add the line below to the top of your <code>README.md</code> to display the badge:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-markdown" data-lang="markdown">[<span style="color:#f92672">![Tests</span>](<span style="color:#a6e22e">https://github.com/&lt;your-username&gt;/hypermodern-python/workflows/Tests/badge.svg</span>)](https://github.com/&lt;your-username&gt;/hypermodern-python/actions?workflow=Tests)
 </code></pre></div><h2 id="coverage-reporting-with-codecov">Coverage reporting with Codecov</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa03.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa03.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa03.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa03.jpg"/> </a>
 </figure>
 
 <p><a href="../hypermodern-python-02-testing#code-coverage-with-coveragepy">Earlier</a>,
@@ -386,8 +386,8 @@ providing the Codecov token as an environment variable.</p>
 </figure>
 
 <h2 id="uploading-your-package-to-pypi">Uploading your package to PyPI</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa04.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa04.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa04.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa04.jpg"/> </a>
 </figure>
 
 <p><a href="https://pypi.org/">PyPI</a> is the official Python package registry,
@@ -494,8 +494,8 @@ the latest release:</p>
 </figure>
 
 <h2 id="documenting-releases-with-release-drafter">Documenting releases with Release Drafter</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa05.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa05.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa05.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa05.jpg"/> </a>
 </figure>
 
 <p>The <a href="https://github.com/release-drafter/release-drafter">Release Drafter</a> action
@@ -564,8 +564,8 @@ using <em>New Label</em> on the Issues tab of the repository.</p>
 
   $CHANGES
 </code></pre></div><h2 id="single-sourcing-the-package-version">Single-sourcing the package version</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa06.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa06.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa06.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa06.jpg"/> </a>
 </figure>
 
 <p>Before creating the next release of your package,
@@ -628,8 +628,8 @@ type checking and coverage for certain lines.</p>
 <code>pyproject.toml</code> has become
 the single source of truth for your package version.</p>
 <h2 id="uploading-your-package-to-testpypi">Uploading your package to TestPyPI</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa07.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa07.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa07.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa07.jpg"/> </a>
 </figure>
 
 <p><a href="https://test.pypi.org">TestPyPI</a>
@@ -685,8 +685,8 @@ and uploaded using the
 <a href="https://github.com/marketplace/actions/pypi-publish">PyPI publish GitHub Action</a>
 of the <a href="https://www.pypa.io/">Python Packaging Authority</a>.</p>
 <h2 id="hosting-documentation-at-read-the-docs">Hosting documentation at Read the Docs</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa08.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa08.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa08.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa08.jpg"/> </a>
 </figure>
 
 <p><a href="https://readthedocs.org/">Read the Docs</a> hosts documentation for countless
@@ -745,8 +745,8 @@ badge to <code>README.md</code>:</p>
 </figure>
 
 <h2 id="conclusion">Conclusion</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-06/nasa09.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/nasa09.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa09.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/nasa09.jpg"/> </a>
 </figure>
 
 <p>Thank you for reading this far. This chapter concludes the Hypermodern Python
@@ -777,7 +777,7 @@ written by <a href="https://en.wikipedia.org/wiki/Savielly_Tartakower">Savielly 
 to describe recent advances in chess theory &ndash;
 inspired the title of this guide.</p>
 <figure class="centered">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-06/boat.jpg"/> 
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-06/boat.jpg"/> 
 </figure>
 
 <section class="footnotes" role="doc-endnotes">
@@ -796,7 +796,7 @@ via
 </li>
 </ol>
 </section>
-<hr><p><figure class="centered"><a href="https://a.co/d/05CDPKk5"><img src="https://cjolowicz.github.io/images/now-available.png" alt="Pre-order “Hypermodern Python Tooling” (O’Reilly, 2024)" /></a></figure></p>
+<hr><p><figure class="centered"><a href="https://a.co/d/05CDPKk5"><img src="https://blog.claudiojolowicz.com/images/now-available.png" alt="Pre-order “Hypermodern Python Tooling” (O’Reilly, 2024)" /></a></figure></p>
       </div>
 
       <footer>

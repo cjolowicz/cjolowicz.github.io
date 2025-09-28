@@ -16,20 +16,20 @@
     <meta property="og:title" content="Hypermodern Python Chapter 3: Linting" />
 <meta property="og:description" content="A guide to modern Python tooling with a focus on simplicity and minimalism." />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://cjolowicz.github.io/posts/hypermodern-python-03-linting/" />
+<meta property="og:url" content="https://blog.claudiojolowicz.com/posts/hypermodern-python-03-linting/" />
 <meta property="article:published_time" content="2020-01-15T07:04:32+01:00" />
 <meta property="article:modified_time" content="2020-01-15T07:04:32+01:00" />
 
 
     
-      <base href="https://cjolowicz.github.io/posts/hypermodern-python-03-linting/">
+      <base href="https://blog.claudiojolowicz.com/posts/hypermodern-python-03-linting/">
     
     <title>
   Hypermodern Python Chapter 3: Linting · Claudio Jolowicz
 </title>
 
     
-      <link rel="canonical" href="https://cjolowicz.github.io/posts/hypermodern-python-03-linting/">
+      <link rel="canonical" href="https://blog.claudiojolowicz.com/posts/hypermodern-python-03-linting/">
     
 
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700%7CMerriweather:300,700%7CSource+Code+Pro:400,700" rel="stylesheet">
@@ -39,7 +39,7 @@
     
       
       
-      <link rel="stylesheet" href="https://cjolowicz.github.io/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
+      <link rel="stylesheet" href="https://blog.claudiojolowicz.com/css/coder.min.28d751104f30c16da1aa1bb04015cbe662cacfe0d1b01af4f2240ad58580069c.css" integrity="sha256-KNdREE8wwW2hqhuwQBXL5mLKz&#43;DRsBr08iQK1YWABpw=" crossorigin="anonymous" media="screen" />
     
 
     
@@ -48,8 +48,8 @@
 
     
 
-    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-32x32.png" sizes="32x32">
-    <link rel="icon" type="image/png" href="https://cjolowicz.github.io/images/favicon-16x16.png" sizes="16x16">
+    <link rel="icon" type="image/png" href="https://blog.claudiojolowicz.com/images/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://blog.claudiojolowicz.com/images/favicon-16x16.png" sizes="16x16">
 
     <meta name="generator" content="Hugo 0.63.2" />
   </head>
@@ -58,7 +58,7 @@
     <main class="wrapper">
       <nav class="navigation">
   <section class="container">
-    <a class="navigation-title" href="https://cjolowicz.github.io/">
+    <a class="navigation-title" href="https://blog.claudiojolowicz.com/">
       Claudio Jolowicz
     </a>
     <input type="checkbox" id="menu-toggle" />
@@ -67,7 +67,7 @@
       
         
           <li class="navigation-item">
-            <a class="navigation-link" href="https://cjolowicz.github.io/posts/">Blog</a>
+            <a class="navigation-link" href="https://blog.claudiojolowicz.com/posts/">Blog</a>
           </li>
         
           <li class="navigation-item">
@@ -85,7 +85,7 @@
         
   <section class="container post">
     <article>
-      <div><figure class="centered"><a href="https://a.co/d/05CDPKk5"><img src="https://cjolowicz.github.io/images/now-available-slim.png" alt="Pre-order “Hypermodern Python Tooling” (O’Reilly, 2024)" /></a></figure></div>
+      <div><figure class="centered"><a href="https://a.co/d/05CDPKk5"><img src="https://blog.claudiojolowicz.com/images/now-available-slim.png" alt="Pre-order “Hypermodern Python Tooling” (O’Reilly, 2024)" /></a></figure></div>
       <header>
         <div class="post-title">
           <h1 class="title">Hypermodern Python Chapter 3: Linting</h1>
@@ -106,26 +106,26 @@
           
           <div class="tags">
   <i class="fas fa-tag"></i>
-    <a href="https://cjolowicz.github.io/tags/python/">python</a>
+    <a href="https://blog.claudiojolowicz.com/tags/python/">python</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/nox/">nox</a>
+    <a href="https://blog.claudiojolowicz.com/tags/nox/">nox</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/flake8/">flake8</a>
+    <a href="https://blog.claudiojolowicz.com/tags/flake8/">flake8</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/black/">black</a>
+    <a href="https://blog.claudiojolowicz.com/tags/black/">black</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/bandit/">bandit</a>
+    <a href="https://blog.claudiojolowicz.com/tags/bandit/">bandit</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/safety/">safety</a>
+    <a href="https://blog.claudiojolowicz.com/tags/safety/">safety</a>
       <span class="separator">•</span>
-    <a href="https://cjolowicz.github.io/tags/pre-commit/">pre-commit</a></div>
+    <a href="https://blog.claudiojolowicz.com/tags/pre-commit/">pre-commit</a></div>
 
         </div>
       </header>
 
       <div>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote01.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote01.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote01.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote01.jpg"/> </a>
 </figure>
         <p><a href="https://medium.com/@cjolowicz/hypermodern-python-3-linting-e2f15708da80">Read this article on Medium</a></p>
 
@@ -164,8 +164,8 @@ repository:</p>
 <li><a href="https://github.com/cjolowicz/hypermodern-python/archive/chapter03.zip">Download code</a></li>
 </ul>
 <h2 id="linting-with-flake8">Linting with Flake8</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote02.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote02.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote02.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote02.jpg"/> </a>
 </figure>
 
 <p>Linters analyze source code to flag programming errors, bugs, stylistic errors,
@@ -220,8 +220,8 @@ option to restrict it to a specific session:</p>
 extensions</a>. Some
 of these will be presented in later sections.</p>
 <h2 id="code-formatting-with-black">Code formatting with Black</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote03.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote03.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote03.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote03.jpg"/> </a>
 </figure>
 
 <p>The next addition to our toolbox is <a href="https://github.com/psf/black">Black</a>, the
@@ -270,8 +270,8 @@ binary operator</em>), and set the maximum line length to a more permissive valu
 <span style="color:#a6e22e">ignore</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">E203,W503</span>
 <span style="color:#a6e22e">max-line-length</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">88</span>
 </code></pre></div><h2 id="checking-imports-with-flake8-import-order">Checking imports with flake8-import-order</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote04.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote04.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote04.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote04.jpg"/> </a>
 </figure>
 
 <p>The <a href="https://github.com/PyCQA/flake8-import-order">flake8-import-order</a> plugin
@@ -328,8 +328,8 @@ and <a href="https://github.com/sqlalchemyorg/zimports">sqlalchemyorg/zimports</
 [How to integrate isort with this project](https://github.com/cjolowicz/hypermodern-python/compare/chapter03...chapter03-isort)
 -->
 <h2 id="finding-more-bugs-with-flake8-bugbear">Finding more bugs with flake8-bugbear</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote05.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote05.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote05.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote05.jpg"/> </a>
 </figure>
 
 <p>The <a href="https://github.com/PyCQA/flake8-bugbear">flake8-bugbear</a> plugin helps you
@@ -354,8 +354,8 @@ set the maximum line length to a sane value:</p>
 <span style="color:#a6e22e">ignore</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">E203,E501,W503</span>
 <span style="color:#a6e22e">max-line-length</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">80</span>
 </code></pre></div><h2 id="identifying-security-issues-with-bandit">Identifying security issues with Bandit</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote06.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote06.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote06.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote06.jpg"/> </a>
 </figure>
 
 <p><a href="https://github.com/PyCQA/bandit">Bandit</a> is a tool designed to find common
@@ -391,8 +391,8 @@ are very concerned with security, you should consider using additional tools,
 for example a fuzzing tool such as
 <a href="https://github.com/jwilk/python-afl">python-afl</a>.</p>
 <h2 id="finding-security-vulnerabilities-in-dependencies-with-safety">Finding security vulnerabilities in dependencies with Safety</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote09.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote09.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote09.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote09.jpg"/> </a>
 </figure>
 
 <p><a href="https://github.com/pyupio/safety">Safety</a> checks the dependencies of your
@@ -469,8 +469,8 @@ flagged by Safety DB for testing purposes):</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">poetry remove insecure-package
 </code></pre></div><p>Feel free to re-run Safety via Nox.</p>
 <h2 id="managing-dependencies-in-nox-sessions-with-poetry">Managing dependencies in Nox sessions with Poetry</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote07.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote07.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote07.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote07.jpg"/> </a>
 </figure>
 
 <p>In this section, I describe how to use Poetry to manage development dependencies
@@ -608,8 +608,8 @@ its dependencies. Then install the test requirements explicitly using
 </code></pre></div><p>Your linter checks are now deterministic, and your Nox sessions benefit from
 Poetry&rsquo;s convenient and reliable dependency management. ✌</p>
 <h2 id="managing-git-hooks-with-pre-commit">Managing Git hooks with pre-commit</h2>
-<figure><a href="https://cjolowicz.github.io/images/hypermodern-python-03/cote08.jpg">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/cote08.jpg"/> </a>
+<figure><a href="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote08.jpg">
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/cote08.jpg"/> </a>
 </figure>
 
 <p>Git provides <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Hooks">hooks</a>
@@ -710,7 +710,7 @@ reasons:</p>
 <p>The next chapter is about adding type annotations and static type checking to
 your project. It will be published on January 22, 2020.</p>
 <p><figure class="centered"><a href="../hypermodern-python-04-typing">
-    <img src="https://cjolowicz.github.io/images/hypermodern-python-03/train.jpg"/> </a>
+    <img src="https://blog.claudiojolowicz.com/images/hypermodern-python-03/train.jpg"/> </a>
 </figure>
 
 <span class="centered"><a href="../hypermodern-python-04-typing">Continue to the next chapter</a></span></p>
@@ -727,7 +727,7 @@ Review</a>) <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x2
 </li>
 </ol>
 </section>
-<hr><p><figure class="centered"><a href="https://a.co/d/05CDPKk5"><img src="https://cjolowicz.github.io/images/now-available.png" alt="Pre-order “Hypermodern Python Tooling” (O’Reilly, 2024)" /></a></figure></p>
+<hr><p><figure class="centered"><a href="https://a.co/d/05CDPKk5"><img src="https://blog.claudiojolowicz.com/images/now-available.png" alt="Pre-order “Hypermodern Python Tooling” (O’Reilly, 2024)" /></a></figure></p>
       </div>
 
       <footer>
